@@ -1,0 +1,182 @@
+[gd_scene load_steps=38 format=3 uid="uid://bxf5la33cxa70"]
+
+[ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_8x7wp"]
+[ext_resource type="Texture2D" uid="uid://dl0d0udl7uf6v" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_1.png" id="1_e013c"]
+[ext_resource type="Texture2D" uid="uid://6j0tp0jsf15p" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_2.png" id="2_uruul"]
+[ext_resource type="Texture2D" uid="uid://b6qvu4tiyb2v5" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_3.png" id="3_riand"]
+[ext_resource type="Texture2D" uid="uid://nq8gfniqiula" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_4.png" id="4_7o1og"]
+[ext_resource type="Texture2D" uid="uid://bdpeaoboeytl" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_5.png" id="5_hrseo"]
+[ext_resource type="Texture2D" uid="uid://bu6lobs0lcdcj" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_6.png" id="6_mp1hg"]
+[ext_resource type="Texture2D" uid="uid://k5my2nqni7qq" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_7.png" id="7_7tlea"]
+[ext_resource type="Texture2D" uid="uid://dls10y23e87km" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_8.png" id="8_6qqld"]
+[ext_resource type="Texture2D" uid="uid://ckup0by182yuk" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_9.png" id="9_5il7w"]
+[ext_resource type="Texture2D" uid="uid://c6t8m1i1a0jrs" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_10.png" id="10_hf3r8"]
+[ext_resource type="Texture2D" uid="uid://k6u7upx67h0q" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_11.png" id="11_7nr45"]
+[ext_resource type="Texture2D" uid="uid://bx7o7yst7t6j2" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_12.png" id="12_ujf3m"]
+[ext_resource type="Texture2D" uid="uid://6olekrmue3pp" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_1.png" id="13_21unn"]
+[ext_resource type="Texture2D" uid="uid://brtetufn6go1m" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_2.png" id="14_8yafy"]
+[ext_resource type="Texture2D" uid="uid://b7ubtxrk0yct0" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_3.png" id="15_41tiu"]
+[ext_resource type="Texture2D" uid="uid://dl2t2bykdhb0l" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_4.png" id="16_amxm4"]
+[ext_resource type="Texture2D" uid="uid://32mqlv6j42d6" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_5.png" id="17_2lruq"]
+[ext_resource type="Texture2D" uid="uid://dj7xettwth75y" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_6.png" id="18_0ba4f"]
+[ext_resource type="Texture2D" uid="uid://qsvwekpqqevq" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_7.png" id="19_gh0f4"]
+[ext_resource type="Texture2D" uid="uid://dg3d0fvrb4x56" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_8.png" id="20_y28om"]
+[ext_resource type="Texture2D" uid="uid://bukqhb2kk4jgk" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_9.png" id="21_qn05u"]
+[ext_resource type="Texture2D" uid="uid://dydne471vbyr2" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_10.png" id="22_y3k0w"]
+[ext_resource type="Texture2D" uid="uid://d0ge51f76esrl" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_11.png" id="23_yehjj"]
+[ext_resource type="Texture2D" uid="uid://ctjnoybhep2yb" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_12.png" id="24_vkrap"]
+[ext_resource type="Texture2D" uid="uid://b21ong81ly8rn" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_13.png" id="25_nxklk"]
+[ext_resource type="Texture2D" uid="uid://cdhb5hokfxke4" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_14.png" id="26_mw6in"]
+[ext_resource type="Texture2D" uid="uid://dgb4aj45i8vlv" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_15.png" id="27_sierp"]
+[ext_resource type="Texture2D" uid="uid://c20wmer68yi33" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_16.png" id="28_s4y4r"]
+[ext_resource type="Texture2D" uid="uid://cg1r5esdnc256" path="res://Art/Pawns/MagmaGolem/44x44_magma_golem.png" id="29_meeby"]
+[ext_resource type="Texture2D" uid="uid://c3ba7nsaq0q2r" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_1.png" id="30_lcx7b"]
+[ext_resource type="Texture2D" uid="uid://dijj65g4rs78s" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_2.png" id="31_cijaf"]
+[ext_resource type="Texture2D" uid="uid://u80gcfhc1ue3" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_3.png" id="32_6c1w7"]
+[ext_resource type="Texture2D" uid="uid://81xbq0qr0wog" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_4.png" id="33_ic7qw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_csact"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_e013c")
+}, {
+"duration": 0.4,
+"texture": ExtResource("2_uruul")
+}, {
+"duration": 4.0,
+"texture": ExtResource("3_riand")
+}, {
+"duration": 0.1,
+"texture": ExtResource("4_7o1og")
+}, {
+"duration": 0.25,
+"texture": ExtResource("5_hrseo")
+}, {
+"duration": 0.1,
+"texture": ExtResource("6_mp1hg")
+}, {
+"duration": 0.4,
+"texture": ExtResource("7_7tlea")
+}, {
+"duration": 5.0,
+"texture": ExtResource("8_6qqld")
+}, {
+"duration": 0.4,
+"texture": ExtResource("9_5il7w")
+}, {
+"duration": 5.0,
+"texture": ExtResource("10_hf3r8")
+}, {
+"duration": 0.5,
+"texture": ExtResource("11_7nr45")
+}, {
+"duration": 5.0,
+"texture": ExtResource("12_ujf3m")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.25,
+"texture": ExtResource("13_21unn")
+}, {
+"duration": 0.35,
+"texture": ExtResource("14_8yafy")
+}, {
+"duration": 0.5,
+"texture": ExtResource("15_41tiu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_amxm4")
+}, {
+"duration": 1.5,
+"texture": ExtResource("17_2lruq")
+}, {
+"duration": 0.75,
+"texture": ExtResource("18_0ba4f")
+}, {
+"duration": 0.25,
+"texture": ExtResource("19_gh0f4")
+}, {
+"duration": 0.5,
+"texture": ExtResource("20_y28om")
+}, {
+"duration": 0.25,
+"texture": ExtResource("21_qn05u")
+}, {
+"duration": 0.25,
+"texture": ExtResource("22_y3k0w")
+}, {
+"duration": 0.1,
+"texture": ExtResource("23_yehjj")
+}, {
+"duration": 5.0,
+"texture": ExtResource("24_vkrap")
+}, {
+"duration": 0.5,
+"texture": ExtResource("25_nxklk")
+}, {
+"duration": 2.5,
+"texture": ExtResource("26_mw6in")
+}, {
+"duration": 1.5,
+"texture": ExtResource("27_sierp")
+}, {
+"duration": 5.0,
+"texture": ExtResource("28_s4y4r")
+}],
+"loop": true,
+"name": &"HeavyAttack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_meeby")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.25,
+"texture": ExtResource("30_lcx7b")
+}, {
+"duration": 1.25,
+"texture": ExtResource("31_cijaf")
+}, {
+"duration": 1.25,
+"texture": ExtResource("32_6c1w7")
+}, {
+"duration": 1.25,
+"texture": ExtResource("33_ic7qw")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qs4cr"]
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwlr"]
+size = Vector2(396, 396)
+
+[node name="MagmaGolem" type="Node2D" groups=["character", "enemy", "magma_golem"]]
+script = ExtResource("1_8x7wp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_csact")
+animation = &"HeavyAttack"
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_qs4cr")
+
+[node name="SearchBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SearchBox"]
+shape = SubResource("RectangleShape2D_ejwlr")

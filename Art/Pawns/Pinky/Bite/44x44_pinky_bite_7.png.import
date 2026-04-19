@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vqofjeuwacla"
-path="res://.godot/imported/44x44_simple_player_24px.png-d5fde51a8e00168d2d1bcefbeb0883e0.ctex"
+uid="uid://c57jtxnbcdf2r"
+path="res://.godot/imported/44x44_pinky_bite_7.png-0e235ccc5f2768261b4a7d3961a63bff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Pawns/44x44_simple_player_24px.png"
-dest_files=["res://.godot/imported/44x44_simple_player_24px.png-d5fde51a8e00168d2d1bcefbeb0883e0.ctex"]
+source_file="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_7.png"
+dest_files=["res://.godot/imported/44x44_pinky_bite_7.png-0e235ccc5f2768261b4a7d3961a63bff.ctex"]
 
 [params]
 

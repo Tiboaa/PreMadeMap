@@ -1,0 +1,154 @@
+[gd_scene load_steps=31 format=3 uid="uid://cbivfhi25kvcw"]
+
+[ext_resource type="Texture2D" uid="uid://dqcjwvxnyotge" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_1.png" id="1_7hfon"]
+[ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_n03ll"]
+[ext_resource type="Texture2D" uid="uid://d0uy7ty8crvue" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_2.png" id="2_n10da"]
+[ext_resource type="Texture2D" uid="uid://dpebofj2to55l" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_3.png" id="3_8p61n"]
+[ext_resource type="Texture2D" uid="uid://by3icalebt4v1" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_4.png" id="4_7wbus"]
+[ext_resource type="Texture2D" uid="uid://gffbu5nktq4d" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_5.png" id="5_nv23b"]
+[ext_resource type="Texture2D" uid="uid://cesaxtsu5wg1o" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_6.png" id="6_dr0s0"]
+[ext_resource type="Texture2D" uid="uid://b7m5dwp1dmuu" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_7.png" id="7_qugu0"]
+[ext_resource type="Texture2D" uid="uid://ct4bwrnyjn5nh" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_8.png" id="8_8xwij"]
+[ext_resource type="Texture2D" uid="uid://bbykovx8evjw1" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_9.png" id="9_qitss"]
+[ext_resource type="Texture2D" uid="uid://ddn6t7lrb465o" path="res://Art/Pawns/BugEater/44x44_bug_eater.png" id="10_fsen3"]
+[ext_resource type="Texture2D" uid="uid://524avevmtpsa" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_1.png" id="10_uc6yp"]
+[ext_resource type="Texture2D" uid="uid://ddxxdpl3xinkh" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_2.png" id="11_n1efq"]
+[ext_resource type="Texture2D" uid="uid://bnvh3ym5fhna6" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_3.png" id="12_pv1lg"]
+[ext_resource type="Texture2D" uid="uid://bo3t4syihr4ek" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_4.png" id="13_wt7o6"]
+[ext_resource type="Texture2D" uid="uid://5dynrpme07r8" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_5.png" id="14_jp5a5"]
+[ext_resource type="Texture2D" uid="uid://l17pj3f7jojx" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_6.png" id="15_impo1"]
+[ext_resource type="Texture2D" uid="uid://bswxfbv3rhiyd" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_7.png" id="16_sl21f"]
+[ext_resource type="Texture2D" uid="uid://b14dp7yardepw" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_8.png" id="17_jxkgv"]
+[ext_resource type="Texture2D" uid="uid://bgsiw2d2fr5od" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_9.png" id="18_dfleu"]
+[ext_resource type="Texture2D" uid="uid://d2h5vk7gh7l4p" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_10.png" id="19_mknpg"]
+[ext_resource type="Texture2D" uid="uid://ddbysx4h5o7mv" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_11.png" id="20_e7jdh"]
+[ext_resource type="Texture2D" uid="uid://44gmc5m5jaim" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_12.png" id="21_kywhv"]
+[ext_resource type="Texture2D" uid="uid://byhtn0fua0b5v" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_13.png" id="22_1t4mp"]
+[ext_resource type="Texture2D" uid="uid://cgv7ti0n3xgqp" path="res://Art/Pawns/BugEater/Walk/44x44_bug_eater_walk_1.png" id="23_yn1tt"]
+[ext_resource type="Texture2D" uid="uid://b58ofxy1raqfl" path="res://Art/Pawns/BugEater/Walk/44x44_bug_eater_walk_2.png" id="24_lq846"]
+[ext_resource type="Texture2D" uid="uid://b6hqc8dlaxrka" path="res://Art/Pawns/BugEater/Walk/44x44_bug_eater_walk_3.png" id="25_h0gmq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mpvf7"]
+animations = [{
+"frames": [{
+"duration": 0.6,
+"texture": ExtResource("1_7hfon")
+}, {
+"duration": 0.6,
+"texture": ExtResource("2_n10da")
+}, {
+"duration": 0.6,
+"texture": ExtResource("3_8p61n")
+}, {
+"duration": 0.6,
+"texture": ExtResource("4_7wbus")
+}, {
+"duration": 1.5,
+"texture": ExtResource("5_nv23b")
+}, {
+"duration": 0.25,
+"texture": ExtResource("6_dr0s0")
+}, {
+"duration": 0.5,
+"texture": ExtResource("7_qugu0")
+}, {
+"duration": 1.1,
+"texture": ExtResource("8_8xwij")
+}, {
+"duration": 0.4,
+"texture": ExtResource("9_qitss")
+}],
+"loop": true,
+"name": &"Bite",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_fsen3")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.75,
+"texture": ExtResource("10_uc6yp")
+}, {
+"duration": 0.75,
+"texture": ExtResource("11_n1efq")
+}, {
+"duration": 0.5,
+"texture": ExtResource("12_pv1lg")
+}, {
+"duration": 2.0,
+"texture": ExtResource("13_wt7o6")
+}, {
+"duration": 0.25,
+"texture": ExtResource("14_jp5a5")
+}, {
+"duration": 0.1,
+"texture": ExtResource("15_impo1")
+}, {
+"duration": 0.15,
+"texture": ExtResource("16_sl21f")
+}, {
+"duration": 0.25,
+"texture": ExtResource("17_jxkgv")
+}, {
+"duration": 0.25,
+"texture": ExtResource("18_dfleu")
+}, {
+"duration": 0.25,
+"texture": ExtResource("19_mknpg")
+}, {
+"duration": 1.1,
+"texture": ExtResource("20_e7jdh")
+}, {
+"duration": 0.6,
+"texture": ExtResource("21_kywhv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_1t4mp")
+}],
+"loop": true,
+"name": &"Slam",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("23_yn1tt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_lq846")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_h0gmq")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_njwt4"]
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_djuhs"]
+size = Vector2(396, 396)
+
+[node name="BugEater" type="Node2D" groups=["bug_eater", "character", "enemy"]]
+script = ExtResource("1_n03ll")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_mpvf7")
+animation = &"Slam"
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_njwt4")
+
+[node name="SearchBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SearchBox"]
+shape = SubResource("RectangleShape2D_djuhs")

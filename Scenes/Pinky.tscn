@@ -1,0 +1,182 @@
+[gd_scene load_steps=38 format=3 uid="uid://ejxovug7r0tk"]
+
+[ext_resource type="Texture2D" uid="uid://cuqvy1370ju1y" path="res://Art/Pawns/Pinky/44x44_pinky.png" id="1_bfj82"]
+[ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_sow0g"]
+[ext_resource type="Texture2D" uid="uid://6ftk7ej6rlbs" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_1.png" id="1_xpuja"]
+[ext_resource type="Texture2D" uid="uid://bjy83ak65yk54" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_2.png" id="2_c27wm"]
+[ext_resource type="Texture2D" uid="uid://787h4hkgtraf" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_3.png" id="3_e7o1w"]
+[ext_resource type="Texture2D" uid="uid://cul0e6gnfiv2w" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_4.png" id="4_w3fx8"]
+[ext_resource type="Texture2D" uid="uid://ccyrk7pfgq2y5" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_5.png" id="5_0mw7v"]
+[ext_resource type="Texture2D" uid="uid://ds87ycr2stxyn" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_6.png" id="6_yqkg4"]
+[ext_resource type="Texture2D" uid="uid://c57jtxnbcdf2r" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_7.png" id="7_b6u8h"]
+[ext_resource type="Texture2D" uid="uid://cnh1um1vl8jwn" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_8.png" id="8_h5go0"]
+[ext_resource type="Texture2D" uid="uid://ktoda828sqq1" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_9.png" id="9_yn3tc"]
+[ext_resource type="Texture2D" uid="uid://chm5m8jq5he6k" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_10.png" id="10_tj4wp"]
+[ext_resource type="Texture2D" uid="uid://dj3u7ftwxelm3" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_11.png" id="11_7ydr8"]
+[ext_resource type="Texture2D" uid="uid://dgvedj5lrjhth" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_12.png" id="12_df6a8"]
+[ext_resource type="Texture2D" uid="uid://c6cr6jdldtfmc" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_13.png" id="13_epk18"]
+[ext_resource type="Texture2D" uid="uid://cmq0q2dxta3vq" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_14.png" id="14_xnlb3"]
+[ext_resource type="Texture2D" uid="uid://dkhxpxeqv2u0a" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_15.png" id="15_0mtfx"]
+[ext_resource type="Texture2D" uid="uid://bwtboh3q7ah7i" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_16.png" id="16_a30v7"]
+[ext_resource type="Texture2D" uid="uid://bclf5lp5n0v4f" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_17.png" id="17_6vvp2"]
+[ext_resource type="Texture2D" uid="uid://b88uagj6onfis" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_1.png" id="19_4foji"]
+[ext_resource type="Texture2D" uid="uid://ruket08oauik" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_2.png" id="20_5ext6"]
+[ext_resource type="Texture2D" uid="uid://tdmp1mokdgq5" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_3.png" id="21_fro6p"]
+[ext_resource type="Texture2D" uid="uid://cb3g3eplbmjo0" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_4.png" id="22_w4ler"]
+[ext_resource type="Texture2D" uid="uid://bstcjp4ddm6hj" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_5.png" id="23_0o0m7"]
+[ext_resource type="Texture2D" uid="uid://bnl2ldbudwrvc" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_6.png" id="24_jav7d"]
+[ext_resource type="Texture2D" uid="uid://t6olw4qayujy" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_7.png" id="25_j4vx7"]
+[ext_resource type="Texture2D" uid="uid://cex1ni0yplxsa" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_8.png" id="26_mdmht"]
+[ext_resource type="Texture2D" uid="uid://bcwbb5spq8awn" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_9.png" id="27_frnp4"]
+[ext_resource type="Texture2D" uid="uid://c3y1u3pfuxxq4" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_10.png" id="28_v7anx"]
+[ext_resource type="Texture2D" uid="uid://cww3j0nbquas6" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_11.png" id="29_anq70"]
+[ext_resource type="Texture2D" uid="uid://cyb2h4mp1q1fr" path="res://Art/Pawns/Pinky/Walk/44x44_pinky_walk_1.png" id="30_q11ck"]
+[ext_resource type="Texture2D" uid="uid://c6urvug0u5842" path="res://Art/Pawns/Pinky/Walk/44x44_pinky_walk_2.png" id="31_bruqk"]
+[ext_resource type="Texture2D" uid="uid://d0ximnn1k7o5d" path="res://Art/Pawns/Pinky/Walk/44x44_pinky_walk_3.png" id="32_kpg8o"]
+[ext_resource type="Texture2D" uid="uid://bf78ek775mau0" path="res://Art/Pawns/Pinky/Walk/44x44_pinky_walk_4.png" id="33_nmq1w"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3ke1x"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("1_xpuja")
+}, {
+"duration": 0.5,
+"texture": ExtResource("2_c27wm")
+}, {
+"duration": 0.5,
+"texture": ExtResource("3_e7o1w")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_w3fx8")
+}, {
+"duration": 0.5,
+"texture": ExtResource("5_0mw7v")
+}, {
+"duration": 0.1,
+"texture": ExtResource("6_yqkg4")
+}, {
+"duration": 0.3,
+"texture": ExtResource("7_b6u8h")
+}, {
+"duration": 0.08,
+"texture": ExtResource("8_h5go0")
+}, {
+"duration": 1.5,
+"texture": ExtResource("9_yn3tc")
+}, {
+"duration": 0.4,
+"texture": ExtResource("10_tj4wp")
+}, {
+"duration": 0.1,
+"texture": ExtResource("11_7ydr8")
+}, {
+"duration": 1.5,
+"texture": ExtResource("12_df6a8")
+}, {
+"duration": 0.13,
+"texture": ExtResource("13_epk18")
+}, {
+"duration": 0.2,
+"texture": ExtResource("14_xnlb3")
+}, {
+"duration": 1.5,
+"texture": ExtResource("15_0mtfx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_a30v7")
+}, {
+"duration": 1.5,
+"texture": ExtResource("17_6vvp2")
+}],
+"loop": true,
+"name": &"Bite",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bfj82")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("19_4foji")
+}, {
+"duration": 0.4,
+"texture": ExtResource("20_5ext6")
+}, {
+"duration": 0.25,
+"texture": ExtResource("21_fro6p")
+}, {
+"duration": 0.5,
+"texture": ExtResource("22_w4ler")
+}, {
+"duration": 0.2,
+"texture": ExtResource("23_0o0m7")
+}, {
+"duration": 0.4,
+"texture": ExtResource("24_jav7d")
+}, {
+"duration": 0.25,
+"texture": ExtResource("25_j4vx7")
+}, {
+"duration": 0.25,
+"texture": ExtResource("26_mdmht")
+}, {
+"duration": 0.5,
+"texture": ExtResource("27_frnp4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_v7anx")
+}, {
+"duration": 1.5,
+"texture": ExtResource("29_anq70")
+}],
+"loop": true,
+"name": &"Slap",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.9,
+"texture": ExtResource("30_q11ck")
+}, {
+"duration": 0.9,
+"texture": ExtResource("31_bruqk")
+}, {
+"duration": 0.9,
+"texture": ExtResource("32_kpg8o")
+}, {
+"duration": 0.9,
+"texture": ExtResource("33_nmq1w")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgci7"]
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bhpov"]
+size = Vector2(396, 396)
+
+[node name="Pinky" type="Node2D" groups=["character", "enemy", "pinky"]]
+script = ExtResource("1_sow0g")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_3ke1x")
+animation = &"Bite"
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_qgci7")
+
+[node name="SearchBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SearchBox"]
+shape = SubResource("RectangleShape2D_bhpov")

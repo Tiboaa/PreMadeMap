@@ -1,0 +1,166 @@
+[gd_scene load_steps=34 format=3 uid="uid://cq47y6nu4mbj3"]
+
+[ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_86lr4"]
+[ext_resource type="Texture2D" uid="uid://bd4targ3gxjpn" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_1.png" id="1_i66v0"]
+[ext_resource type="Texture2D" uid="uid://bkgo3l2njta7i" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_2.png" id="2_cwwuh"]
+[ext_resource type="Texture2D" uid="uid://d3e3xnrvdcgj5" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_3.png" id="3_bj8u6"]
+[ext_resource type="Texture2D" uid="uid://cgyncx0v0niu4" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_4.png" id="4_4f01x"]
+[ext_resource type="Texture2D" uid="uid://d3ov8bcr0ebl4" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_5.png" id="5_xtjo4"]
+[ext_resource type="Texture2D" uid="uid://c5m6j0wk240bi" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_6.png" id="6_yxffk"]
+[ext_resource type="Texture2D" uid="uid://bei67a0bbdgm4" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_7.png" id="7_0yfve"]
+[ext_resource type="Texture2D" uid="uid://wawr4vooa0eh" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_8.png" id="8_lcdr3"]
+[ext_resource type="Texture2D" uid="uid://ten0f3alyyl8" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_9.png" id="9_ex67m"]
+[ext_resource type="Texture2D" uid="uid://ircfa6lwolo2" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_10.png" id="10_445lg"]
+[ext_resource type="Texture2D" uid="uid://b32hvup347hci" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_11.png" id="11_b0s0m"]
+[ext_resource type="Texture2D" uid="uid://bcjstv6lgwjrp" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_12.png" id="12_0klox"]
+[ext_resource type="Texture2D" uid="uid://cxjbt3ib2p1mc" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_13.png" id="13_184x5"]
+[ext_resource type="Texture2D" uid="uid://byd7ic804k1ot" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_14.png" id="14_euvqq"]
+[ext_resource type="Texture2D" uid="uid://u0x8e2mhc7j3" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_15.png" id="15_kq7y0"]
+[ext_resource type="Texture2D" uid="uid://b3a67m60phamg" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_16.png" id="16_pbalj"]
+[ext_resource type="Texture2D" uid="uid://ccisebmvq1se" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_1.png" id="17_hrffg"]
+[ext_resource type="Texture2D" uid="uid://bpbamkl45pigs" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_2.png" id="18_4cbg6"]
+[ext_resource type="Texture2D" uid="uid://266agqi3bbu5" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_3.png" id="19_oiq3c"]
+[ext_resource type="Texture2D" uid="uid://cg8jh1u210dvd" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_4.png" id="20_7fq36"]
+[ext_resource type="Texture2D" uid="uid://de0xpods64uq0" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_5.png" id="21_kupc6"]
+[ext_resource type="Texture2D" uid="uid://b4u00gj0icpr5" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_6.png" id="22_xkkdf"]
+[ext_resource type="Texture2D" uid="uid://ccc0iu11nqtj5" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_7.png" id="23_4452t"]
+[ext_resource type="Texture2D" uid="uid://dw3xggoy6kkii" path="res://Art/Pawns/GreenHoplite/Attack/44x44_green_hoplite_attack_8.png" id="24_lbt14"]
+[ext_resource type="Texture2D" uid="uid://dabo5qfu8wwys" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_1.png" id="25_bat76"]
+[ext_resource type="Texture2D" uid="uid://ch6m8tbm3lja5" path="res://Art/Pawns/GreenHoplite/44x44_green_hoplite.png" id="25_ql846"]
+[ext_resource type="Texture2D" uid="uid://fqsehqfu6xqh" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_2.png" id="26_iuw68"]
+[ext_resource type="Texture2D" uid="uid://qseexicu3d58" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_3.png" id="27_pkww6"]
+[ext_resource type="Texture2D" uid="uid://j6s520axvnc1" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_4.png" id="28_2h2ek"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tgyq0"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("1_i66v0")
+}, {
+"duration": 0.5,
+"texture": ExtResource("2_cwwuh")
+}, {
+"duration": 0.1,
+"texture": ExtResource("3_bj8u6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4f01x")
+}, {
+"duration": 0.4,
+"texture": ExtResource("5_xtjo4")
+}, {
+"duration": 0.1,
+"texture": ExtResource("6_yxffk")
+}, {
+"duration": 0.5,
+"texture": ExtResource("7_0yfve")
+}, {
+"duration": 0.5,
+"texture": ExtResource("8_lcdr3")
+}, {
+"duration": 0.1,
+"texture": ExtResource("9_ex67m")
+}, {
+"duration": 0.1,
+"texture": ExtResource("10_445lg")
+}, {
+"duration": 0.5,
+"texture": ExtResource("11_b0s0m")
+}, {
+"duration": 0.2,
+"texture": ExtResource("12_0klox")
+}, {
+"duration": 0.2,
+"texture": ExtResource("13_184x5")
+}, {
+"duration": 0.5,
+"texture": ExtResource("14_euvqq")
+}, {
+"duration": 0.2,
+"texture": ExtResource("15_kq7y0")
+}, {
+"duration": 2.0,
+"texture": ExtResource("16_pbalj")
+}],
+"loop": true,
+"name": &"ApAttack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_hrffg")
+}, {
+"duration": 0.5,
+"texture": ExtResource("18_4cbg6")
+}, {
+"duration": 0.25,
+"texture": ExtResource("19_oiq3c")
+}, {
+"duration": 2.5,
+"texture": ExtResource("20_7fq36")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_kupc6")
+}, {
+"duration": 0.25,
+"texture": ExtResource("22_xkkdf")
+}, {
+"duration": 0.25,
+"texture": ExtResource("23_4452t")
+}, {
+"duration": 1.5,
+"texture": ExtResource("24_lbt14")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_ql846")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_bat76")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_iuw68")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_pkww6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_2h2ek")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mxmlw"]
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x230s"]
+size = Vector2(396, 396)
+
+[node name="GreenHoplite" type="Node2D" groups=["character", "enemy", "green_hoplite"]]
+script = ExtResource("1_86lr4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_tgyq0")
+animation = &"Attack"
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_mxmlw")
+
+[node name="SearchBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SearchBox"]
+shape = SubResource("RectangleShape2D_x230s")

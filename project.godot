@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Szakdoga On Pre Made Map"
-run/main_scene="res://Scenes/TestMap.tscn"
+run/main_scene="res://Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 window/stretch/mode="canvas_items"
 mouse_cursor/custom_image="res://Art/mouse.png"
+
+[gui]
+
+theme/custom_font="res://Fonts/Jersey10-Regular.ttf"
 
 [input]
 

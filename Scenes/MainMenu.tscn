@@ -1,0 +1,103 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjxtv35473c1t"]
+
+[ext_resource type="Texture2D" uid="uid://m4jf4rtakxhp" path="res://Art/Menu/menu_base.png" id="1_eufq7"]
+[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_yv5kj"]
+[ext_resource type="PackedScene" uid="uid://7e527n6t0bsa" path="res://Scenes/Button.tscn" id="2_dpde2"]
+[ext_resource type="Texture2D" uid="uid://kyrjugvlu85m" path="res://Art/Menu/big_menu_point.png" id="3_q0nl1"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_yv5kj")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.984314, 0.905882, 0.831373, 1)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -224.0
+offset_right = 320.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_eufq7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TextureRect"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -304.0
+offset_top = -1.0
+offset_right = 304.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/TextureRect/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 78
+text = "ADVENTURE GAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewGame" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+layout_mode = 2
+texture = ExtResource("3_q0nl1")
+
+[node name="Button" parent="CanvasLayer/TextureRect/VBoxContainer/NewGame" index="0"]
+text = "New Game"
+
+[node name="LoadGame" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+layout_mode = 2
+texture = ExtResource("3_q0nl1")
+
+[node name="Button" parent="CanvasLayer/TextureRect/VBoxContainer/LoadGame" index="0"]
+text = "Load Game
+"
+
+[node name="Settings" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+layout_mode = 2
+texture = ExtResource("3_q0nl1")
+
+[node name="Button" parent="CanvasLayer/TextureRect/VBoxContainer/Settings" index="0"]
+text = "Settings"
+
+[node name="Exit" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+layout_mode = 2
+texture = ExtResource("3_q0nl1")
+
+[node name="Button" parent="CanvasLayer/TextureRect/VBoxContainer/Exit" index="0"]
+text = "Exit Game
+"
+
+[connection signal="pressed" from="CanvasLayer/TextureRect/VBoxContainer/NewGame/Button" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/TextureRect/VBoxContainer/LoadGame/Button" to="." method="_on_load_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/TextureRect/VBoxContainer/Settings/Button" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/TextureRect/VBoxContainer/Exit/Button" to="." method="_on_exit_pressed"]
+
+[editable path="CanvasLayer/TextureRect/VBoxContainer/NewGame"]
+[editable path="CanvasLayer/TextureRect/VBoxContainer/LoadGame"]
+[editable path="CanvasLayer/TextureRect/VBoxContainer/Settings"]
+[editable path="CanvasLayer/TextureRect/VBoxContainer/Exit"]
