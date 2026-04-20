@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var EnemyDetection = $%EnemyDetection
+@onready var Visible = $%Visible
 
 var player_pos
 var player_clicked: bool = false

@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://crl17fxxdntu6"]
+[gd_scene load_steps=16 format=3 uid="uid://dj28crav7i1eb"]
 
-[ext_resource type="Script" path="res://Scripts/fps_counter.gd" id="1_qc2bp"]
+[ext_resource type="Script" path="res://Scripts/basic_ui.gd" id="1_ph1l6"]
+[ext_resource type="Texture2D" uid="uid://b6n27y4std5u2" path="res://Art/Ui/447x95_ui_menu_map.png" id="2_wexfq"]
+[ext_resource type="PackedScene" uid="uid://7e527n6t0bsa" path="res://Scenes/Button.tscn" id="3_ad7cy"]
+[ext_resource type="Texture2D" uid="uid://1muvd0a0dai3" path="res://Art/Ui/85x85_ui_buttons_1.png" id="4_vuhv6"]
+[ext_resource type="Texture2D" uid="uid://bxshvr20u6e4o" path="res://Art/Ui/85x85_ui_buttons_2.png" id="5_m7qpf"]
+[ext_resource type="Texture2D" uid="uid://g4tjug83ye34" path="res://Art/Ui/85x85_ui_buttons_3.png" id="6_j437a"]
+[ext_resource type="Texture2D" uid="uid://dur4vv1g86d73" path="res://Art/Ui/85x85_ui_buttons_4.png" id="7_r858a"]
+[ext_resource type="Texture2D" uid="uid://bk2qkcpykjyxh" path="res://Art/Ui/85x85_ui_buttons_5.png" id="8_e04ur"]
+[ext_resource type="Texture2D" uid="uid://chw8atxd5yip2" path="res://Art/Ui/271x120_ui_menu_battle.png" id="9_kho1x"]
+[ext_resource type="Texture2D" uid="uid://d0t5kjv1toqpm" path="res://Art/Ui/85x110_ui_buttons_battle_1.png" id="10_vq1x7"]
+[ext_resource type="Texture2D" uid="uid://fux8atfa7nin" path="res://Art/Ui/85x110_ui_buttons_battle_2.png" id="11_q6hi3"]
+[ext_resource type="Texture2D" uid="uid://crmn3sp0uqfa7" path="res://Art/Ui/85x110_ui_buttons_battle_3.png" id="12_4p2bs"]
+[ext_resource type="Texture2D" uid="uid://ocrwsdhsw6bh" path="res://Art/Ui/112x112_compass_base.png" id="13_oma76"]
+[ext_resource type="Texture2D" uid="uid://c7pbkdjp7gxc7" path="res://Art/Ui/112x112_compass_needle_shadow.png" id="14_v8gxs"]
+[ext_resource type="Texture2D" uid="uid://c3fbhlfsupe0x" path="res://Art/Ui/112x112_compass_needle.png" id="15_f68rv"]
 
 [node name="BasicUI" type="Control"]
 layout_mode = 3
@@ -9,10 +23,260 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ph1l6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Fps" type="Label" parent="CanvasLayer"]
+offset_left = 1012.0
+offset_right = 1059.0
+offset_bottom = 18.0
+text = "FPS: 000"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 8.0
+offset_right = 116.0
+offset_bottom = 106.0
+
+[node name="Oil" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "OIL:   ------
+"
+
+[node name="Wood" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "WOOD:  ----
+"
+
+[node name="Stone" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "STONE: ----"
+
+[node name="Iron" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "IRON:  -----"
+
+[node name="Minerals" type="Label" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "MINERALS: -"
+
+[node name="MapToolbelt" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
 offset_right = 40.0
-offset_bottom = 23.0
-script = ExtResource("1_qc2bp")
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MapToolbelt"]
+layout_mode = 0
+offset_left = 353.0
+offset_top = 528.0
+offset_right = 800.0
+offset_bottom = 623.0
+mouse_filter = 0
+texture = ExtResource("2_wexfq")
+
+[node name="Axe" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 358.0
+offset_top = 533.0
+offset_right = 443.0
+offset_bottom = 618.0
+texture = ExtResource("4_vuhv6")
+
+[node name="Button" parent="CanvasLayer/MapToolbelt/Axe" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="Pickaxe" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 446.0
+offset_top = 533.0
+offset_right = 531.0
+offset_bottom = 618.0
+texture = ExtResource("5_m7qpf")
+
+[node name="Button" parent="CanvasLayer/MapToolbelt/Pickaxe" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="Pumpjack" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 534.0
+offset_top = 533.0
+offset_right = 619.0
+offset_bottom = 618.0
+texture = ExtResource("6_j437a")
+
+[node name="Button" parent="CanvasLayer/MapToolbelt/Pumpjack" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="Rocket" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 622.0
+offset_top = 533.0
+offset_right = 707.0
+offset_bottom = 618.0
+texture = ExtResource("7_r858a")
+
+[node name="Button" parent="CanvasLayer/MapToolbelt/Rocket" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="Attack" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 710.0
+offset_top = 533.0
+offset_right = 795.0
+offset_bottom = 618.0
+texture = ExtResource("8_e04ur")
+
+[node name="Button" parent="CanvasLayer/MapToolbelt/Attack" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="BattleToolbelt" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/BattleToolbelt"]
+layout_mode = 0
+offset_left = 441.0
+offset_top = 503.0
+offset_right = 712.0
+offset_bottom = 623.0
+mouse_filter = 0
+texture = ExtResource("9_kho1x")
+
+[node name="BasicAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 446.0
+offset_top = 508.0
+offset_right = 531.0
+offset_bottom = 618.0
+texture = ExtResource("10_vq1x7")
+
+[node name="Button" parent="CanvasLayer/BattleToolbelt/BasicAtk" index="0"]
+theme_override_font_sizes/font_size = 18
+toggle_mode = true
+text = ""
+
+[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/BasicAtk/Button" index="0"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 82.0
+offset_bottom = 21.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Basic attack
+"
+horizontal_alignment = 1
+
+[node name="AreaAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 534.0
+offset_top = 508.0
+offset_right = 619.0
+offset_bottom = 618.0
+texture = ExtResource("11_q6hi3")
+
+[node name="Button" parent="CanvasLayer/BattleToolbelt/AreaAtk" index="0"]
+toggle_mode = true
+text = ""
+
+[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/AreaAtk/Button" index="0"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 82.0
+offset_bottom = 21.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Area attack
+"
+horizontal_alignment = 1
+
+[node name="HeavyAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 622.0
+offset_top = 508.0
+offset_right = 707.0
+offset_bottom = 618.0
+texture = ExtResource("12_4p2bs")
+
+[node name="Button" parent="CanvasLayer/BattleToolbelt/HeavyAtk" index="0"]
+toggle_mode = true
+text = "
+"
+
+[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/HeavyAtk/Button" index="0"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 82.0
+offset_bottom = 21.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Heavy attack
+"
+horizontal_alignment = 1
+
+[node name="Compass" type="TextureRect" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_left = 1040.0
+offset_right = 1152.0
+offset_bottom = 112.0
+texture = ExtResource("13_oma76")
+
+[node name="Shadow" type="TextureRect" parent="CanvasLayer/Compass"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+rotation = -5.5676
+pivot_offset = Vector2(56, 56)
+texture = ExtResource("14_v8gxs")
+metadata/_edit_group_ = true
+
+[node name="Needle" type="TextureRect" parent="CanvasLayer/Compass/Shadow"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 112.0
+texture = ExtResource("15_f68rv")
+
+[connection signal="toggled" from="CanvasLayer/MapToolbelt/Axe/Button" to="." method="_on_axe_toggled"]
+[connection signal="toggled" from="CanvasLayer/MapToolbelt/Pickaxe/Button" to="." method="_on_pickaxe_toggled"]
+[connection signal="toggled" from="CanvasLayer/MapToolbelt/Pumpjack/Button" to="." method="_on_pumpjack_toggled"]
+[connection signal="toggled" from="CanvasLayer/MapToolbelt/Rocket/Button" to="." method="_on_rocket_toggled"]
+[connection signal="toggled" from="CanvasLayer/MapToolbelt/Attack/Button" to="." method="_on_attack_toggled"]
+[connection signal="toggled" from="CanvasLayer/BattleToolbelt/BasicAtk/Button" to="." method="_on_basic_atk_toggled"]
+[connection signal="toggled" from="CanvasLayer/BattleToolbelt/AreaAtk/Button" to="." method="_on_area_atk_toggled"]
+[connection signal="toggled" from="CanvasLayer/BattleToolbelt/HeavyAtk/Button" to="." method="_on_heavy_atk_toggled"]
+
+[editable path="CanvasLayer/MapToolbelt/Axe"]
+[editable path="CanvasLayer/MapToolbelt/Pickaxe"]
+[editable path="CanvasLayer/MapToolbelt/Pumpjack"]
+[editable path="CanvasLayer/MapToolbelt/Rocket"]
+[editable path="CanvasLayer/MapToolbelt/Attack"]
+[editable path="CanvasLayer/BattleToolbelt/BasicAtk"]
+[editable path="CanvasLayer/BattleToolbelt/AreaAtk"]
+[editable path="CanvasLayer/BattleToolbelt/HeavyAtk"]

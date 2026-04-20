@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bthuua7v322w4"]
+[gd_scene load_steps=7 format=3 uid="uid://bthuua7v322w4"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_38nw6"]
 [ext_resource type="Texture2D" uid="uid://vqofjeuwacla" path="res://Art/Pawns/Player/44x44_simple_player_24px.png" id="2_qw3x0"]
@@ -11,6 +11,9 @@ size = Vector2(132, 220)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2qber"]
 size = Vector2(220, 132)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jpgcv"]
+size = Vector2(1152, 648)
 
 [node name="Player" type="Node2D" groups=["character"]]
 script = ExtResource("1_38nw6")
@@ -34,3 +37,9 @@ shape = SubResource("RectangleShape2D_ewawd")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="EnemyDetection"]
 shape = SubResource("RectangleShape2D_2qber")
+
+[node name="Visible" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visible"]
+shape = SubResource("RectangleShape2D_jpgcv")

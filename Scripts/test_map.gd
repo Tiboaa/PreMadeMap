@@ -1,6 +1,9 @@
 extends Node2D
 #132x88 test map
+
 @onready var Map = $TileMap
+@onready var UI = $BasicUI
+@onready var ToolBelt = $BasicUI/CanvasLayer/MapToolbelt
 var PauseMenuScene = preload("res://Scenes/PauseMenu.tscn")
 var PauseMenu
 
@@ -20,6 +23,16 @@ var max_preview_distance: Vector2i = Vector2i(-1, -1)
 var prev_map_tile: Vector2i
 var prev_player_tile: Vector2i
 var player_tile: Vector2i
+var bugs_moving: bool = false
+var hoplites_moving: bool = false
+var golems_moving: bool = false
+var pinkies_moving: bool = false
+
+var axe_pressed: bool = false
+var pickaxe_pressed: bool = false
+var pumpjack_pressed: bool = false
+var rocket_pressed: bool = false
+var attack_pressed: bool = false
 
 func _ready():
 	generate_map()
@@ -33,53 +46,96 @@ func _ready():
 	spawn_magma_golems(10)
 	spawn_pinkies(20)
 	player_tile = Map.local_to_map(Player.global_position)
+	prev_player_tile = player_tile
 	
+	UI.axe_changed.connect(_on_axe_changed)
+	UI.pickaxe_changed.connect(_on_pickaxe_changed)
+	UI.pumpjack_changed.connect(_on_pumpjack_changed)
+	UI.rocket_changed.connect(_on_rocket_changed)
+	UI.attack_changed.connect(_on_attack_changed)
 
+func _unhandled_input(event):
+	if not bugs_moving and not hoplites_moving and not golems_moving and not pinkies_moving:
+		if event is InputEventMouseMotion: #and player_clicked:
+			var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
+			if Map.local_to_map(get_global_mouse_position()) != Map.local_to_map(Player.global_position):
+				Map.set_cell(1, current_map_tile, 1, Vector2i(6, 6))
+			if prev_map_tile != null and prev_map_tile != current_map_tile and prev_map_tile != Map.local_to_map(Player.global_position):
+				Map.set_cell(1, prev_map_tile, 1, Vector2i(-1, -1))
+			prev_map_tile = current_map_tile
+			
+		if axe_pressed or pickaxe_pressed or pumpjack_pressed or rocket_pressed or attack_pressed:
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				var click_pos: Vector2 = get_global_mouse_position()
+				var map_tile_clicked: Vector2i = Map.local_to_map(click_pos)
+				if map_tile_clicked == player_tile:
+					Player.player_clicked = true
+					if axe_pressed:
+						axe_pressed = false
+						UI.get_node("CanvasLayer/MapToolbelt/Axe/Button").button_pressed = false
+					if pickaxe_pressed:
+						pickaxe_pressed = false
+						UI.get_node("CanvasLayer/MapToolbelt/Pickaxe/Button").button_pressed = false
+					if pumpjack_pressed:
+						pumpjack_pressed = false
+						UI.get_node("CanvasLayer/MapToolbelt/Pumpjack/Button").button_pressed = false
+					if rocket_pressed:
+						rocket_pressed = false
+						UI.get_node("CanvasLayer/MapToolbelt/Rocket/Button").button_pressed = false
+					if attack_pressed:
+						attack_pressed = false
+						UI.get_node("CanvasLayer/MapToolbelt/Attack/Button").button_pressed = false
+					Map.set_cell(1, player_tile, 1, Vector2i(5, 6))
+				elif abs(map_tile_clicked.x - player_tile.x) <= 1 and abs(map_tile_clicked.y - player_tile.y) <= 1:
+					if axe_pressed:
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					if pickaxe_pressed:
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					if pumpjack_pressed:
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					if rocket_pressed:
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					if attack_pressed:
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					await get_tree().create_timer(0.5).timeout
+					Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
+		
+		else:
+			if event is InputEventMouseMotion and Player.player_clicked:
+				var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
 
+				if current_map_tile != Map.local_to_map(Player.global_position):
+					var route = get_preview_path(Map.local_to_map(Player.global_position), current_map_tile)
 
-func _input(event):
-	if event is InputEventMouseMotion: #and player_clicked:
-		var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
-		if Map.local_to_map(get_global_mouse_position()) != Map.local_to_map(Player.global_position):
-			Map.set_cell(1, current_map_tile, 1, Vector2i(6, 6))
-		if prev_map_tile != null and prev_map_tile != current_map_tile and prev_map_tile != Map.local_to_map(Player.global_position):
-			Map.set_cell(1, prev_map_tile, 1, Vector2i(-1, -1))
-		prev_map_tile = current_map_tile
-	
-	if event is InputEventMouseMotion and Player.player_clicked:
-		var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
+					if route.size() > 0:
+						draw_preview(route)
+			
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				var click_pos: Vector2 = get_global_mouse_position()
+				var map_tile_clicked: Vector2i = Map.local_to_map(click_pos)
+				if Map.local_to_map(Player.global_position) == map_tile_clicked:
+					if Player.player_clicked == false:
+						Player.player_clicked = true
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					elif Player.player_clicked == true:
+						Player.player_clicked = false
+						Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
+				elif Player.player_clicked == true and Map.local_to_map(Player.global_position) != map_tile_clicked:
+					Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					Map.set_cell(1, Map.local_to_map(Player.global_position), 1, Vector2i(-1,-1))
 
-		if current_map_tile != Map.local_to_map(Player.global_position):
-			var route = get_preview_path(Map.local_to_map(Player.global_position), current_map_tile)
-
-			if route.size() > 0:
-				draw_preview(route)
-	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var click_pos: Vector2 = get_global_mouse_position()
-		var map_tile_clicked: Vector2i = Map.local_to_map(click_pos)
-		if Map.local_to_map(Player.global_position) == map_tile_clicked:
-			if Player.player_clicked == false:
-				Player.player_clicked = true
-				Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
-			elif Player.player_clicked == true:
-				Player.player_clicked = false
-				Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
-		elif Player.player_clicked == true and Map.local_to_map(Player.global_position) != map_tile_clicked:
-			Map.set_cell(1, #Find or create a func to get_layer_id() reverse of get_layer_name()
-				map_tile_clicked, 1, Vector2i(5, 6))
-			Map.set_cell(1,Map.local_to_map(Player.global_position),1,Vector2i(-1,-1))
-
-			await get_tree().create_timer(0.5).timeout
-			Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
-			Player.player_clicked = false
-			await move_there(Map.local_to_map(Player.global_position), map_tile_clicked)
-			player_tile = Map.local_to_map(Player.global_position)
-			clear_route()
-			bug_eater_move()
-			green_hoplite_move()
-			magma_golem_move()
-			pinky_move()
+					await get_tree().create_timer(0.5).timeout
+					Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
+					Player.player_clicked = false
+					await move_there(Map.local_to_map(Player.global_position), map_tile_clicked)
+					player_tile = Map.local_to_map(Player.global_position)
+					clear_route()
+					if prev_player_tile != player_tile:
+						await bug_eater_move()
+						await green_hoplite_move()
+						await magma_golem_move()
+						await pinky_move()
+					prev_player_tile = player_tile
 
 
 
@@ -214,25 +270,17 @@ func move_there(start_tile: Vector2i, destination: Vector2i):
 		if current == destination:
 			var route = reconstruct_path(came_from, current)
 
-			var total_cost = 0
+			#var total_cost = 0
 
-			#print("Route:", route)
 			for i in range(1, route.size()):
 				var tile = route[i]
 				if Player.movement_points >= map_data[tile.x][tile.y][5]:
 					await Player.tile_clicked(Map.map_to_local(tile))
-					total_cost += map_data[tile.x][tile.y][5]
-					#print("I moved there: ", tile, " the cost is: ", map_data[tile.x][tile.y][5], " becouse the feature is: ", map_data[tile.x][tile.y][3])
+					#total_cost += map_data[tile.x][tile.y][5]
 				else:
-					#print("out of movement points, remaining movement points: ", Player.movement_points)
-					#print("the movement cost would have been: ", map_data[tile.x][tile.y][5])
-					#print("Total movement cost:", total_cost)
 					Player.movement_points = Player.max_movement_points
 					return
 				Player.movement_points -= map_data[tile.x][tile.y][5]
-				#print("remaining movement_points: ", Player.movement_points)
-				
-			#print("Total movement cost:", total_cost)
 			Player.movement_points = Player.max_movement_points
 			return
 
@@ -258,7 +306,6 @@ func move_there(start_tile: Vector2i, destination: Vector2i):
 	#print("No path found")
 
 func heuristic(a: Vector2i, b: Vector2i) -> int:
-	# Manhattan distance
 	return abs(a.x - b.x) + abs(a.y - b.y)
 
 func reconstruct_path(came_from: Dictionary, current: Vector2i) -> Array:
@@ -406,13 +453,12 @@ func get_direction_tile(prev: Vector2i, current: Vector2i, next: Vector2i) -> Ve
 # -------------------------
 # ENEMIES
 # -------------------------
-#func stopped_moving(_enemy):
-	#enemies_finished_moving += 1
-	#
-#func enemies_moving():
-	#enemies_finished_moving = 0
-	#while current_enemies > enemies_finished_moving:
-		#continue
+#func stopped_moving():
+
+func enemy_moving(enemy, target_tile):
+	if enemy.enemy_visible:
+		await enemy.move_to_tile(target_tile, Map)
+	else: enemy.global_position = Map.map_to_local(target_tile)
 
 func is_tile_occupied(tile: Vector2i) -> bool:
 	for unit in get_tree().get_nodes_in_group("character"):
@@ -656,16 +702,22 @@ func spawn_bug_eaters(count: int):
 			bug.set_mode("map")
 
 func bug_eater_move():
-	for bug in get_tree().get_nodes_in_group("bug_eater"):
+	bugs_moving = true
+	var type = "bug_eater"
+	for bug in get_tree().get_nodes_in_group(type):
 		var current_tile = Map.local_to_map(bug.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
 		if bug.check_player() != Vector2i(-1, -1):
-			target_tile = move_closer_to_player(current_tile, "bug_eater")
-			bug.global_position = Map.map_to_local(target_tile)
-
+			target_tile = move_closer_to_player(current_tile, type)
 		else:
-			target_tile = get_random_tile(current_tile, "bug_eater")
-			bug.global_position = Map.map_to_local(target_tile)
+			target_tile = get_random_tile(current_tile, type)
+		var direction = target_tile.x - current_tile.x
+		if direction < 0:
+			bug.Anim.flip_h = true
+		elif direction > 0:
+			bug.Anim.flip_h = false
+		await enemy_moving(bug, target_tile)
+	bugs_moving = false
 # -------------------------
 # GREEN HOPLITE
 # -------------------------
@@ -710,18 +762,22 @@ func spawn_green_hoplites(count: int):
 			hoplite.set_mode("map")
 
 func green_hoplite_move():
-	for hoplite in get_tree().get_nodes_in_group("green_hoplite"):
+	hoplites_moving = true
+	var type = "green_hoplite"
+	for hoplite in get_tree().get_nodes_in_group(type):
 		var current_tile = Map.local_to_map(hoplite.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
-		
 		if hoplite.check_player() != Vector2i(-1, -1):
-			target_tile = move_closer_to_player(current_tile, "green_hoplite")
-			hoplite.global_position = Map.map_to_local(target_tile)
-
+			target_tile = move_closer_to_player(current_tile, type)
 		else:
-			target_tile = get_random_tile(current_tile, "green_hoplite")
-			hoplite.global_position = Map.map_to_local(target_tile)
-
+			target_tile = get_random_tile(current_tile, type)
+		var direction = target_tile.x - current_tile.x
+		if direction < 0:
+			hoplite.Anim.flip_h = true
+		elif direction > 0:
+			hoplite.Anim.flip_h = false
+		await enemy_moving(hoplite, target_tile)
+	hoplites_moving = false
 # -------------------------
 # MAGMA GOLEM
 # -------------------------
@@ -767,18 +823,22 @@ func spawn_magma_golems(count: int):
 			golem.set_mode("map")
 
 func magma_golem_move():
-	for golem in get_tree().get_nodes_in_group("magma_golem"):
+	golems_moving = true
+	var type = "magma_golem"
+	for golem  in get_tree().get_nodes_in_group(type):
 		var current_tile = Map.local_to_map(golem.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
-		
 		if golem.check_player() != Vector2i(-1, -1):
-			target_tile = move_closer_to_player(current_tile, "magma_golem")
-			golem.global_position = Map.map_to_local(target_tile)
-
+			target_tile = move_closer_to_player(current_tile, type)
 		else:
-			target_tile = get_random_tile(current_tile, "magma_golem")
-			golem.global_position = Map.map_to_local(target_tile)
-
+			target_tile = get_random_tile(current_tile, type)
+		var direction = target_tile.x - current_tile.x
+		if direction < 0:
+			golem.Anim.flip_h = true
+		elif direction > 0:
+			golem.Anim.flip_h = false
+		await enemy_moving(golem, target_tile)
+	golems_moving = false
 # -------------------------
 # PINKY
 # -------------------------
@@ -821,17 +881,91 @@ func spawn_pinkies(count: int):
 			pinky.set_mode("map")
 
 func pinky_move():
-	for pinky in get_tree().get_nodes_in_group("pinky"):
+	pinkies_moving = true
+	var type = "pinky"
+	for pinky in get_tree().get_nodes_in_group(type):
 		var current_tile = Map.local_to_map(pinky.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
-		
 		if pinky.check_player() != Vector2i(-1, -1):
-			target_tile = move_closer_to_player(current_tile, "pinky")
-			pinky.global_position = Map.map_to_local(target_tile)
-
+			target_tile = move_closer_to_player(current_tile, type)
 		else:
-			target_tile = get_random_tile(current_tile, "pinky")
-			pinky.global_position = Map.map_to_local(target_tile)
+			target_tile = get_random_tile(current_tile, type)
+		var direction = target_tile.x - current_tile.x
+		if direction < 0:
+			pinky.Anim.flip_h = true
+		elif direction > 0:
+			pinky.Anim.flip_h = false
+		await enemy_moving(pinky, target_tile)
+	pinkies_moving = false
+
+# -------------------------
+# UI
+# -------------------------
+func _on_axe_changed(pressed: bool):
+	if pressed:
+		axe_pressed = true
+		pickaxe_pressed = false
+		pumpjack_pressed = false
+		rocket_pressed = false
+		attack_pressed = false
+		Player.player_clicked = false
+	else: axe_pressed = false
+	clear_preview()
+	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+	
+func _on_pickaxe_changed(pressed: bool):
+	if pressed:
+		axe_pressed = false
+		pickaxe_pressed = true
+		pumpjack_pressed = false
+		rocket_pressed = false
+		attack_pressed = false
+		Player.player_clicked = false
+	else: pickaxe_pressed = false
+	clear_preview()
+	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+	
+func _on_pumpjack_changed(pressed: bool):
+	if pressed:
+		axe_pressed = false
+		pickaxe_pressed = false
+		pumpjack_pressed = true
+		rocket_pressed = false
+		attack_pressed = false
+		Player.player_clicked = false
+	else: pumpjack_pressed = false
+	clear_preview()
+	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+	
+func _on_rocket_changed(pressed: bool):
+	if pressed:
+		axe_pressed = false
+		pickaxe_pressed = false
+		pumpjack_pressed = false
+		rocket_pressed = true
+		attack_pressed = false
+		Player.player_clicked = false
+	else: rocket_pressed = false
+	clear_preview()
+	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+	
+func _on_attack_changed(pressed: bool):
+	if pressed:
+		axe_pressed = false
+		pickaxe_pressed = false
+		pumpjack_pressed = false
+		rocket_pressed = false
+		attack_pressed = true
+		Player.player_clicked = false
+	else: attack_pressed = false
+	clear_preview()
+	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+
+
+
+
+
+
 
 
 
