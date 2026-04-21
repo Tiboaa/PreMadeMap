@@ -6,22 +6,31 @@ signal pumpjack_changed(pressed: bool)
 signal rocket_changed(pressed: bool)
 signal attack_changed(pressed: bool)
 
-@onready var FpsCounter = $CanvasLayer/Fps
+@onready var OilCounter = $MapLayer/VBoxContainer/Oil
+@onready var WoodCounter = $MapLayer/VBoxContainer/Wood
+@onready var StoneCounter = $MapLayer/VBoxContainer/Stone
+@onready var IronCounter = $MapLayer/VBoxContainer/Iron
+@onready var MineralsCounter = $MapLayer/VBoxContainer/Minerals
+
+@onready var FpsCounter = $MapLayer/Fps
+@onready var BattleFpsCounter = $BattleLayer/Fps
 @onready var AxeBtn = $%Axe
 @onready var PickaxeBtn = $%Pickaxe
 @onready var PumpjackBtn = $%Pumpjack
 @onready var RocketBtn = $%Rocket
 @onready var AttackBtn = $%Attack
 
-@onready var BasicAtkBtn = $%BasicAtk
-@onready var AreaAtkBtn = $%AreaAtk
-@onready var HeavyAtkBtn = $%HeavyAtk
-
 @onready var Shadow = $%Shadow
 @onready var Needle = $%Needle
 @onready var Compass = $%Compass
 
-@onready var main_scene = get_tree().current_scene
+@onready var BasicAtkBtn = $%BasicAtk
+@onready var AreaAtkBtn = $%AreaAtk
+@onready var HeavyAtkBtn = $%HeavyAtk
+
+@onready var HealthBar = $%HealthBar
+
+@onready var MainScene = get_tree().current_scene
 
 @onready var axe = preload("res://Art/Ui/85x85_ui_buttons_1.png")
 @onready var axe_clicked = preload("res://Art/Ui/85x85_ui_buttons_clicked_1.png")
@@ -42,10 +51,32 @@ signal attack_changed(pressed: bool)
 @onready var heavy_atk_clicked = preload("res://Art/Ui/85x110_ui_buttons_battle_clicked_3.png")
 
 
+func _ready():
+	Shadow.rotation_degrees = 0
+	OilCounter.text = "OIL:   ------ " + str(MainScene.oil_resource)
+	WoodCounter.text = "WOOD:  ---- " + str(MainScene.wood_resource)
+	StoneCounter.text = "STONE: ---- " + str(MainScene.stone_resource)
+	IronCounter.text = "IRON:  ----- " + str(MainScene.iron_resource)
+	MineralsCounter.text = "MINERALS: - " + str(MainScene.minerals_resource)
+	
+	HealthBar.max_value = MainScene.max_health
+	HealthBar.value = MainScene.health
 
 func _process(_delta):
 	var fps: float = Engine.get_frames_per_second()
 	FpsCounter.text = "FPS: " + str(fps)
+	BattleFpsCounter.text = "FPS: " + str(fps)
+
+	
+# -------------------------
+# RESOURCE_INFO
+# -------------------------
+func update_resources():
+	OilCounter.text = "OIL:   ------ " + str(MainScene.oil_resource)
+	WoodCounter.text = "WOOD:  ---- " + str(MainScene.wood_resource)
+	StoneCounter.text = "STONE: ---- " + str(MainScene.stone_resource)
+	IronCounter.text = "IRON:  ----- " + str(MainScene.iron_resource)
+	MineralsCounter.text = "MINERALS: - " + str(MainScene.minerals_resource)
 
 
 # -------------------------
@@ -72,7 +103,7 @@ func _on_axe_toggled(toggled_on):
 	if toggled_on:
 		AxeBtn.texture = axe_clicked
 		only_one_toggled(AxeBtn)
-		main_scene.axe_pressed = true
+		MainScene.axe_pressed = true
 	else:
 		AxeBtn.texture = axe
 	emit_signal("axe_changed", toggled_on)
@@ -113,6 +144,8 @@ func _on_attack_toggled(toggled_on):
 # -------------------------
 # BATTLE TOOLBELT
 # -------------------------
+func health_changed(): HealthBar.value = MainScene.health
+
 func only_one_atk_toggled(button):
 	var buttons = [BasicAtkBtn, AreaAtkBtn, HeavyAtkBtn]
 
@@ -126,7 +159,6 @@ func only_one_atk_toggled(button):
 				BasicAtkBtn: i.texture = basic_atk
 				AreaAtkBtn: i.texture = area_atk
 				HeavyAtkBtn: i.texture = heavy_atk
-
 
 func _on_basic_atk_toggled(toggled_on):
 	if toggled_on:

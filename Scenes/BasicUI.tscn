@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dj28crav7i1eb"]
+[gd_scene load_steps=19 format=3 uid="uid://dj28crav7i1eb"]
 
 [ext_resource type="Script" path="res://Scripts/basic_ui.gd" id="1_ph1l6"]
 [ext_resource type="Texture2D" uid="uid://b6n27y4std5u2" path="res://Art/Ui/447x95_ui_menu_map.png" id="2_wexfq"]
@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://ocrwsdhsw6bh" path="res://Art/Ui/112x112_compass_base.png" id="13_oma76"]
 [ext_resource type="Texture2D" uid="uid://c7pbkdjp7gxc7" path="res://Art/Ui/112x112_compass_needle_shadow.png" id="14_v8gxs"]
 [ext_resource type="Texture2D" uid="uid://c3fbhlfsupe0x" path="res://Art/Ui/112x112_compass_needle.png" id="15_f68rv"]
+[ext_resource type="Texture2D" uid="uid://c2bxrpdtnocab" path="res://Art/Ui/264x20_health_bar_2.png" id="16_bgl44"]
+[ext_resource type="Texture2D" uid="uid://dfiu3hrc14ysb" path="res://Art/Ui/264x20_health_bar_1.png" id="17_0su2g"]
+[ext_resource type="Texture2D" uid="uid://b6wndx35ko124" path="res://Art/Ui/264x20_health_bar_3.png" id="18_wk0ck"]
 
 [node name="BasicUI" type="Control"]
 layout_mode = 3
@@ -25,53 +28,52 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ph1l6")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="MapLayer" type="CanvasLayer" parent="."]
 
-[node name="Fps" type="Label" parent="CanvasLayer"]
+[node name="Fps" type="Label" parent="MapLayer"]
 offset_left = 1012.0
 offset_right = 1059.0
 offset_bottom = 18.0
 text = "FPS: 000"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MapLayer"]
 offset_left = 8.0
 offset_right = 116.0
 offset_bottom = 106.0
 
-[node name="Oil" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="Oil" type="Label" parent="MapLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "OIL:   ------
 "
 
-[node name="Wood" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="Wood" type="Label" parent="MapLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "WOOD:  ----
-"
+text = "WOOD:  ----"
 
-[node name="Stone" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="Stone" type="Label" parent="MapLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "STONE: ----"
 
-[node name="Iron" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="Iron" type="Label" parent="MapLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "IRON:  -----"
 
-[node name="Minerals" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="Minerals" type="Label" parent="MapLayer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "MINERALS: -"
 
-[node name="MapToolbelt" type="Control" parent="CanvasLayer"]
+[node name="MapToolbelt" type="Control" parent="MapLayer"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MapToolbelt"]
+[node name="TextureRect" type="TextureRect" parent="MapLayer/MapToolbelt"]
 layout_mode = 0
 offset_left = 353.0
 offset_top = 528.0
@@ -80,7 +82,7 @@ offset_bottom = 623.0
 mouse_filter = 0
 texture = ExtResource("2_wexfq")
 
-[node name="Axe" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="Axe" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 358.0
@@ -89,11 +91,11 @@ offset_right = 443.0
 offset_bottom = 618.0
 texture = ExtResource("4_vuhv6")
 
-[node name="Button" parent="CanvasLayer/MapToolbelt/Axe" index="0"]
+[node name="Button" parent="MapLayer/MapToolbelt/Axe" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="Pickaxe" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="Pickaxe" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 446.0
@@ -102,11 +104,11 @@ offset_right = 531.0
 offset_bottom = 618.0
 texture = ExtResource("5_m7qpf")
 
-[node name="Button" parent="CanvasLayer/MapToolbelt/Pickaxe" index="0"]
+[node name="Button" parent="MapLayer/MapToolbelt/Pickaxe" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="Pumpjack" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="Pumpjack" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 534.0
@@ -115,11 +117,11 @@ offset_right = 619.0
 offset_bottom = 618.0
 texture = ExtResource("6_j437a")
 
-[node name="Button" parent="CanvasLayer/MapToolbelt/Pumpjack" index="0"]
+[node name="Button" parent="MapLayer/MapToolbelt/Pumpjack" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="Rocket" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="Rocket" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 622.0
@@ -128,11 +130,11 @@ offset_right = 707.0
 offset_bottom = 618.0
 texture = ExtResource("7_r858a")
 
-[node name="Button" parent="CanvasLayer/MapToolbelt/Rocket" index="0"]
+[node name="Button" parent="MapLayer/MapToolbelt/Rocket" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="Attack" parent="CanvasLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="Attack" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 710.0
@@ -141,18 +143,47 @@ offset_right = 795.0
 offset_bottom = 618.0
 texture = ExtResource("8_e04ur")
 
-[node name="Button" parent="CanvasLayer/MapToolbelt/Attack" index="0"]
+[node name="Button" parent="MapLayer/MapToolbelt/Attack" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="BattleToolbelt" type="Control" parent="CanvasLayer"]
+[node name="Compass" type="TextureRect" parent="MapLayer"]
+unique_name_in_owner = true
+offset_left = 1040.0
+offset_right = 1152.0
+offset_bottom = 112.0
+texture = ExtResource("13_oma76")
+
+[node name="Shadow" type="TextureRect" parent="MapLayer/Compass"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.66148
+pivot_offset = Vector2(56, 56)
+texture = ExtResource("14_v8gxs")
+metadata/_edit_group_ = true
+
+[node name="Needle" type="TextureRect" parent="MapLayer/Compass/Shadow"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 112.0
+texture = ExtResource("15_f68rv")
+
+[node name="BattleLayer" type="CanvasLayer" parent="."]
 visible = false
+
+[node name="BattleToolbelt" type="Control" parent="BattleLayer"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/BattleToolbelt"]
+[node name="TextureRect" type="TextureRect" parent="BattleLayer/BattleToolbelt"]
 layout_mode = 0
 offset_left = 441.0
 offset_top = 503.0
@@ -161,7 +192,7 @@ offset_bottom = 623.0
 mouse_filter = 0
 texture = ExtResource("9_kho1x")
 
-[node name="BasicAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="BasicAtk" parent="BattleLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 446.0
@@ -170,12 +201,12 @@ offset_right = 531.0
 offset_bottom = 618.0
 texture = ExtResource("10_vq1x7")
 
-[node name="Button" parent="CanvasLayer/BattleToolbelt/BasicAtk" index="0"]
+[node name="Button" parent="BattleLayer/BattleToolbelt/BasicAtk" index="0"]
 theme_override_font_sizes/font_size = 18
 toggle_mode = true
 text = ""
 
-[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/BasicAtk/Button" index="0"]
+[node name="Label" type="Label" parent="BattleLayer/BattleToolbelt/BasicAtk/Button" index="0"]
 layout_mode = 0
 offset_left = 3.0
 offset_top = 3.0
@@ -187,7 +218,7 @@ text = "Basic attack
 "
 horizontal_alignment = 1
 
-[node name="AreaAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="AreaAtk" parent="BattleLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 534.0
@@ -196,11 +227,11 @@ offset_right = 619.0
 offset_bottom = 618.0
 texture = ExtResource("11_q6hi3")
 
-[node name="Button" parent="CanvasLayer/BattleToolbelt/AreaAtk" index="0"]
+[node name="Button" parent="BattleLayer/BattleToolbelt/AreaAtk" index="0"]
 toggle_mode = true
 text = ""
 
-[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/AreaAtk/Button" index="0"]
+[node name="Label" type="Label" parent="BattleLayer/BattleToolbelt/AreaAtk/Button" index="0"]
 layout_mode = 0
 offset_left = 3.0
 offset_top = 3.0
@@ -212,7 +243,7 @@ text = "Area attack
 "
 horizontal_alignment = 1
 
-[node name="HeavyAtk" parent="CanvasLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
+[node name="HeavyAtk" parent="BattleLayer/BattleToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 622.0
@@ -221,12 +252,12 @@ offset_right = 707.0
 offset_bottom = 618.0
 texture = ExtResource("12_4p2bs")
 
-[node name="Button" parent="CanvasLayer/BattleToolbelt/HeavyAtk" index="0"]
+[node name="Button" parent="BattleLayer/BattleToolbelt/HeavyAtk" index="0"]
 toggle_mode = true
 text = "
 "
 
-[node name="Label" type="Label" parent="CanvasLayer/BattleToolbelt/HeavyAtk/Button" index="0"]
+[node name="Label" type="Label" parent="BattleLayer/BattleToolbelt/HeavyAtk/Button" index="0"]
 layout_mode = 0
 offset_left = 3.0
 offset_top = 3.0
@@ -238,45 +269,41 @@ text = "Heavy attack
 "
 horizontal_alignment = 1
 
-[node name="Compass" type="TextureRect" parent="CanvasLayer"]
+[node name="HealthBar" type="TextureProgressBar" parent="BattleLayer"]
 unique_name_in_owner = true
-offset_left = 1040.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -132.0
+offset_top = 10.0
+offset_right = 132.0
+offset_bottom = 50.0
+grow_horizontal = 2
+size_flags_vertical = 8
+texture_under = ExtResource("16_bgl44")
+texture_over = ExtResource("17_0su2g")
+texture_progress = ExtResource("18_wk0ck")
+
+[node name="Fps" type="Label" parent="BattleLayer"]
+offset_left = 1105.0
 offset_right = 1152.0
-offset_bottom = 112.0
-texture = ExtResource("13_oma76")
+offset_bottom = 18.0
+text = "FPS: 000"
 
-[node name="Shadow" type="TextureRect" parent="CanvasLayer/Compass"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-rotation = -5.5676
-pivot_offset = Vector2(56, 56)
-texture = ExtResource("14_v8gxs")
-metadata/_edit_group_ = true
+[connection signal="toggled" from="MapLayer/MapToolbelt/Axe/Button" to="." method="_on_axe_toggled"]
+[connection signal="toggled" from="MapLayer/MapToolbelt/Pickaxe/Button" to="." method="_on_pickaxe_toggled"]
+[connection signal="toggled" from="MapLayer/MapToolbelt/Pumpjack/Button" to="." method="_on_pumpjack_toggled"]
+[connection signal="toggled" from="MapLayer/MapToolbelt/Rocket/Button" to="." method="_on_rocket_toggled"]
+[connection signal="toggled" from="MapLayer/MapToolbelt/Attack/Button" to="." method="_on_attack_toggled"]
+[connection signal="toggled" from="BattleLayer/BattleToolbelt/BasicAtk/Button" to="." method="_on_basic_atk_toggled"]
+[connection signal="toggled" from="BattleLayer/BattleToolbelt/AreaAtk/Button" to="." method="_on_area_atk_toggled"]
+[connection signal="toggled" from="BattleLayer/BattleToolbelt/HeavyAtk/Button" to="." method="_on_heavy_atk_toggled"]
 
-[node name="Needle" type="TextureRect" parent="CanvasLayer/Compass/Shadow"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 112.0
-offset_bottom = 112.0
-texture = ExtResource("15_f68rv")
-
-[connection signal="toggled" from="CanvasLayer/MapToolbelt/Axe/Button" to="." method="_on_axe_toggled"]
-[connection signal="toggled" from="CanvasLayer/MapToolbelt/Pickaxe/Button" to="." method="_on_pickaxe_toggled"]
-[connection signal="toggled" from="CanvasLayer/MapToolbelt/Pumpjack/Button" to="." method="_on_pumpjack_toggled"]
-[connection signal="toggled" from="CanvasLayer/MapToolbelt/Rocket/Button" to="." method="_on_rocket_toggled"]
-[connection signal="toggled" from="CanvasLayer/MapToolbelt/Attack/Button" to="." method="_on_attack_toggled"]
-[connection signal="toggled" from="CanvasLayer/BattleToolbelt/BasicAtk/Button" to="." method="_on_basic_atk_toggled"]
-[connection signal="toggled" from="CanvasLayer/BattleToolbelt/AreaAtk/Button" to="." method="_on_area_atk_toggled"]
-[connection signal="toggled" from="CanvasLayer/BattleToolbelt/HeavyAtk/Button" to="." method="_on_heavy_atk_toggled"]
-
-[editable path="CanvasLayer/MapToolbelt/Axe"]
-[editable path="CanvasLayer/MapToolbelt/Pickaxe"]
-[editable path="CanvasLayer/MapToolbelt/Pumpjack"]
-[editable path="CanvasLayer/MapToolbelt/Rocket"]
-[editable path="CanvasLayer/MapToolbelt/Attack"]
-[editable path="CanvasLayer/BattleToolbelt/BasicAtk"]
-[editable path="CanvasLayer/BattleToolbelt/AreaAtk"]
-[editable path="CanvasLayer/BattleToolbelt/HeavyAtk"]
+[editable path="MapLayer/MapToolbelt/Axe"]
+[editable path="MapLayer/MapToolbelt/Pickaxe"]
+[editable path="MapLayer/MapToolbelt/Pumpjack"]
+[editable path="MapLayer/MapToolbelt/Rocket"]
+[editable path="MapLayer/MapToolbelt/Attack"]
+[editable path="BattleLayer/BattleToolbelt/BasicAtk"]
+[editable path="BattleLayer/BattleToolbelt/AreaAtk"]
+[editable path="BattleLayer/BattleToolbelt/HeavyAtk"]

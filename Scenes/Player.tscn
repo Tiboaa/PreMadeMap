@@ -1,10 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://bthuua7v322w4"]
+[gd_scene load_steps=14 format=3 uid="uid://bthuua7v322w4"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_38nw6"]
 [ext_resource type="Texture2D" uid="uid://vqofjeuwacla" path="res://Art/Pawns/Player/44x44_simple_player_24px.png" id="2_qw3x0"]
+[ext_resource type="Texture2D" uid="uid://rbyjt24qhvvm" path="res://Art/Rocket/132x44_rocket_liftoff_fly_1.png" id="3_ypogv"]
+[ext_resource type="Texture2D" uid="uid://di787eupffhpo" path="res://Art/Rocket/132x44_rocket_liftoff_fly_2.png" id="4_xms1e"]
+[ext_resource type="Texture2D" uid="uid://crnt3wk7tuqbv" path="res://Art/Rocket/132x44_rocket_liftoff_fly_3.png" id="5_ko6ox"]
+[ext_resource type="Texture2D" uid="uid://0d7u2ym2gybr" path="res://Art/Rocket/132x44_rocket_liftoff_fly_4.png" id="6_xl6qi"]
+[ext_resource type="Texture2D" uid="uid://drmi861lb02e2" path="res://Art/Rocket/132x44_rocket_liftoff_fly_5.png" id="7_wdmnw"]
+[ext_resource type="Texture2D" uid="uid://dv7i0mk16feas" path="res://Art/Rocket/132x44_rocket_liftoff_fly_6.png" id="8_wnwww"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2schs"]
 size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jpgcv"]
+size = Vector2(1152, 648)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ewawd"]
 size = Vector2(132, 220)
@@ -12,14 +21,42 @@ size = Vector2(132, 220)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2qber"]
 size = Vector2(220, 132)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jpgcv"]
-size = Vector2(1152, 648)
+[sub_resource type="SpriteFrames" id="SpriteFrames_h7m1w"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qw3x0")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ypogv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xms1e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ko6ox")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_xl6qi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_wdmnw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_wnwww")
+}],
+"loop": true,
+"name": &"Rocket",
+"speed": 12.0
+}]
 
 [node name="Player" type="Node2D" groups=["character"]]
 script = ExtResource("1_38nw6")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_qw3x0")
 
 [node name="PlayerHurtBox" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -27,7 +64,11 @@ unique_name_in_owner = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtBox"]
 shape = SubResource("RectangleShape2D_2schs")
 
-[node name="Temp Cam" type="Camera2D" parent="."]
+[node name="Visible" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visible"]
+shape = SubResource("RectangleShape2D_jpgcv")
 
 [node name="EnemyDetection" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -38,8 +79,8 @@ shape = SubResource("RectangleShape2D_ewawd")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="EnemyDetection"]
 shape = SubResource("RectangleShape2D_2qber")
 
-[node name="Visible" type="Area2D" parent="."]
-unique_name_in_owner = true
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_h7m1w")
+animation = &"Idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visible"]
-shape = SubResource("RectangleShape2D_jpgcv")
+[node name="Camera2D" type="Camera2D" parent="."]

@@ -3,7 +3,8 @@ extends Node2D
 
 @onready var Map = $TileMap
 @onready var UI = $BasicUI
-@onready var ToolBelt = $BasicUI/CanvasLayer/MapToolbelt
+@onready var EndCredit = $EndCredit
+@onready var ToolBelt = $BasicUI/MapLayer/MapToolbelt
 var PauseMenuScene = preload("res://Scenes/PauseMenu.tscn")
 var PauseMenu
 
@@ -34,6 +35,31 @@ var pumpjack_pressed: bool = false
 var rocket_pressed: bool = false
 var attack_pressed: bool = false
 
+var wood_resource: int
+var stone_resource: int
+var iron_resource: int
+var minerals_resource: int
+var oil_resource: int
+
+var iron_cost: int = 10
+var minerals_cost: int = 2
+var stone_cost: int = 10
+var wood_cost: int = 10
+var oil_cost: int = 10
+
+var rocket_tile: Vector2i = Vector2i(-1, -1)
+var rocket_tile_data
+var rocket_level: int = -1
+
+var flying: bool = false
+var velocity: float = 0.0
+var acceleration: float = 300.0
+
+var max_health = 100
+var health = max_health
+
+var battle_map_open: bool = false
+
 func _ready():
 	generate_map()
 	save_map_to_txt()
@@ -53,8 +79,33 @@ func _ready():
 	UI.pumpjack_changed.connect(_on_pumpjack_changed)
 	UI.rocket_changed.connect(_on_rocket_changed)
 	UI.attack_changed.connect(_on_attack_changed)
+	
+	wood_resource = 0
+	stone_resource = 0
+	iron_resource = 0
+	minerals_resource = 0
+	oil_resource = 0
+
+
+
+func _process(delta):
+	if !battle_map_open:
+		if flying:
+			velocity += acceleration * delta
+			Player.global_position.y -= velocity * delta
+		else: move_compass()
+
+		
+
 
 func _unhandled_input(event):
+	if flying:
+		return
+	if event.is_action_pressed("ui_cancel"):
+		PauseMenu.visible = true
+		get_tree().paused = true
+	if battle_map_open:
+		return
 	if not bugs_moving and not hoplites_moving and not golems_moving and not pinkies_moving:
 		if event is InputEventMouseMotion: #and player_clicked:
 			var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
@@ -63,6 +114,11 @@ func _unhandled_input(event):
 			if prev_map_tile != null and prev_map_tile != current_map_tile and prev_map_tile != Map.local_to_map(Player.global_position):
 				Map.set_cell(1, prev_map_tile, 1, Vector2i(-1, -1))
 			prev_map_tile = current_map_tile
+			if attack_pressed:
+				var route = get_preview_path(Map.local_to_map(Player.global_position), current_map_tile)
+
+				if route.size() > 0:
+					draw_preview(route)
 			
 		if axe_pressed or pickaxe_pressed or pumpjack_pressed or rocket_pressed or attack_pressed:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -72,33 +128,156 @@ func _unhandled_input(event):
 					Player.player_clicked = true
 					if axe_pressed:
 						axe_pressed = false
-						UI.get_node("CanvasLayer/MapToolbelt/Axe/Button").button_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Axe/Button").button_pressed = false
 					if pickaxe_pressed:
 						pickaxe_pressed = false
-						UI.get_node("CanvasLayer/MapToolbelt/Pickaxe/Button").button_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Pickaxe/Button").button_pressed = false
 					if pumpjack_pressed:
 						pumpjack_pressed = false
-						UI.get_node("CanvasLayer/MapToolbelt/Pumpjack/Button").button_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Pumpjack/Button").button_pressed = false
 					if rocket_pressed:
 						rocket_pressed = false
-						UI.get_node("CanvasLayer/MapToolbelt/Rocket/Button").button_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Rocket/Button").button_pressed = false
 					if attack_pressed:
 						attack_pressed = false
-						UI.get_node("CanvasLayer/MapToolbelt/Attack/Button").button_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Attack/Button").button_pressed = false
 					Map.set_cell(1, player_tile, 1, Vector2i(5, 6))
 				elif abs(map_tile_clicked.x - player_tile.x) <= 1 and abs(map_tile_clicked.y - player_tile.y) <= 1:
+					var cta_coords: Vector2i = Map.get_cell_atlas_coords(2, map_tile_clicked) #current tile atlas
 					if axe_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+						if map_data[map_tile_clicked.x][map_tile_clicked.y][3] == "tree":
+							if map_data[map_tile_clicked.x][map_tile_clicked.y][4]:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][3] = ""
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
+								map_data[map_tile_clicked.x][map_tile_clicked.y][5] = 2
+								Map.set_cell(2, map_tile_clicked, 1, Vector2i(-1, -1))
+								wood_resource += 2
+							else:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
+								if cta_coords.x == 12:
+									Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x, cta_coords.y+6))
+								else:
+									Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x+1, cta_coords.y+6))
+								wood_resource += 10
+						UI.update_resources()
 					if pickaxe_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+						var type_of_rock = map_data[map_tile_clicked.x][map_tile_clicked.y][3]
+						if type_of_rock == "stone" or type_of_rock == "iron_ore" or type_of_rock == "minerals":
+							if map_data[map_tile_clicked.x][map_tile_clicked.y][4]:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][3] = ""
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
+								map_data[map_tile_clicked.x][map_tile_clicked.y][5] = 2
+								Map.set_cell(2, map_tile_clicked, 1, Vector2i(-1, -1))
+								match type_of_rock:
+									"stone":
+										stone_resource += 2
+									"iron_ore":
+										iron_resource += 2
+									"minerals":
+										minerals_resource += 2
+							else:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
+								Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x, cta_coords.y+1))
+								match type_of_rock:
+									"stone":
+										stone_resource += 10
+									"iron_ore":
+										iron_resource += 10
+									"minerals":
+										minerals_resource += 10
+						UI.update_resources()
 					if pumpjack_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+						if map_data[map_tile_clicked.x][map_tile_clicked.y][3] == "crude_oil":
+							if map_data[map_tile_clicked.x][map_tile_clicked.y][4]:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][3] = ""
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
+								map_data[map_tile_clicked.x][map_tile_clicked.y][5] = 2
+								Map.set_cell(2, map_tile_clicked, 1, Vector2i(-1, -1))
+								oil_resource += 2
+							else:
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
+								Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x, cta_coords.y+1))
+								oil_resource += 10
+						UI.update_resources()
 					if rocket_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
-					if attack_pressed:
-						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+						if map_data[map_tile_clicked.x][map_tile_clicked.y] == ["grass",false,false,"rocket",true,2] and rocket_tile == map_tile_clicked:
+							print("continue rocket building?")
+							if rocket_level % 2 == 0 and iron_cost <= iron_resource and minerals_cost <= minerals_resource:
+								iron_resource -= iron_cost
+								minerals_resource -= minerals_cost
+								UI.update_resources()
+								rocket_level += 1
+								
+								if rocket_level <=3:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 2))
+								elif rocket_level <= 9:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 1))
+								elif rocket_level <= 13:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 0))
+									if rocket_level == 13:
+										map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
+							elif rocket_level % 2 == 0:
+								if iron_cost > iron_resource:
+									print("not enough iron")
+								if minerals_cost > minerals_resource:
+									print("not enough minerals")
+									
+							if rocket_level % 2 == 1 and wood_cost <= wood_resource:
+								wood_resource -= wood_cost
+								UI.update_resources()
+								rocket_level += 1
+								
+								if rocket_level <=3:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 2))
+								elif rocket_level <= 9:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 1))
+								elif rocket_level <= 13:
+									Map.set_cell(2, map_tile_clicked, 3, Vector2i(rocket_level, 0))
+									if rocket_level == 13:
+										map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
+							elif rocket_level % 2 == 1:
+								print("not enough wood") 
+								
+						elif map_data[map_tile_clicked.x][map_tile_clicked.y] == ["grass",false,false,"rocket",false,2] and rocket_tile == map_tile_clicked:
+							print("rocket is ready to launch")
+							launch_rocket()
+							
+						elif map_data[map_tile_clicked.x][map_tile_clicked.y] == ["grass",false,false,"",false,2] and (rocket_tile == map_tile_clicked or rocket_tile == Vector2i(-1, -1)):
+							print("start rocket building?")
+							if stone_cost <= stone_resource:
+								stone_resource -= stone_cost
+								UI.update_resources()
+								rocket_tile = map_tile_clicked
+								rocket_level = 0
+								Map.set_cell(2, map_tile_clicked, 3, Vector2i(0, 2))
+								map_data[map_tile_clicked.x][map_tile_clicked.y][3] = "rocket"
+								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
+							else:
+								print("Not enough stone to build")
+				if attack_pressed:
+					Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
+					if is_tile_occupied(map_tile_clicked, "enemy"):
+						await move_there(player_tile, map_tile_clicked)
+						player_tile = Map.local_to_map(Player.global_position) 
+						clear_preview()
+						
+						#HERE
+						for enemy in get_tree().get_nodes_in_group("enemy"):
+							if enemy.check_player() != Vector2i(-1, -1):
+								enemy.add_to_group("fighting")
+						attack_pressed = false
+						UI.get_node("MapLayer/MapToolbelt/Attack/Button").button_pressed = false
+						#await get_tree().create_timer(0.5).timeout
+						#Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
+						print("Enemy attacked")
+						start_fighting()
 					await get_tree().create_timer(0.5).timeout
 					Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
+					# CALL BATTLE MAP WITH Player.get_node("EnemyDetection")
 		
 		else:
 			if event is InputEventMouseMotion and Player.player_clicked:
@@ -136,12 +315,11 @@ func _unhandled_input(event):
 						await magma_golem_move()
 						await pinky_move()
 					prev_player_tile = player_tile
+					start_fighting()
 
 
 
-	if event.is_action_pressed("ui_cancel"):
-		PauseMenu.visible = true
-		get_tree().paused = true
+
 
 # -------------------------
 # MAP GENERATION
@@ -249,7 +427,6 @@ func move_there(start_tile: Vector2i, destination: Vector2i):
 	var is_water = map_data[destination.x][destination.y][5] == 100
 
 	if is_water:
-		#print("Invalid destination")
 		return
 		
 	var open_set = [start_tile]
@@ -455,13 +632,38 @@ func get_direction_tile(prev: Vector2i, current: Vector2i, next: Vector2i) -> Ve
 # -------------------------
 #func stopped_moving():
 
+func start_fighting():
+	var bug_num: int = 0
+	var hoplite_num: int = 0
+	var golem_num: int = 0
+	var pinky_num: int = 0
+	for fighter in get_tree().get_nodes_in_group("fighting"):
+		if fighter.is_in_group("bug_eater"): bug_num += 1
+		if fighter.is_in_group("green_hoplite"): hoplite_num += 1
+		if fighter.is_in_group("magma_golem"): golem_num += 1
+		if fighter.is_in_group("pinky"): pinky_num += 1
+		fighter.queue_free()
+	if bug_num != 0 or hoplite_num != 0 or golem_num != 0 or pinky_num != 0:
+		battle_map_open = true
+		Map.visible = false
+		
+		UI.get_node("MapLayer").visible = false
+		UI.get_node("BattleLayer").visible = true
+		
+		var battle_scene = preload("res://Scenes/BattleMap.tscn").instantiate()
+		Player.queue_free()
+		add_child(battle_scene)
+		
+	#battle_scene.setup(bug_num, hoplite_num, golem_num, pinky_num)
+
 func enemy_moving(enemy, target_tile):
 	if enemy.enemy_visible:
 		await enemy.move_to_tile(target_tile, Map)
 	else: enemy.global_position = Map.map_to_local(target_tile)
+	
 
-func is_tile_occupied(tile: Vector2i) -> bool:
-	for unit in get_tree().get_nodes_in_group("character"):
+func is_tile_occupied(tile: Vector2i, by_who: String) -> bool:
+	for unit in get_tree().get_nodes_in_group(by_who):
 		var unit_tile = Map.local_to_map(unit.global_position)
 		if unit_tile == tile:
 			return true
@@ -487,7 +689,7 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 				continue
 			if is_road:
 				continue
-			if is_tile_occupied(tile):
+			if is_tile_occupied(tile, "character"):
 				continue
 
 			return tile
@@ -510,7 +712,7 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 				continue
 			if not is_road:
 				continue
-			if is_tile_occupied(tile):
+			if is_tile_occupied(tile, "character"):
 				continue
 
 			return tile
@@ -533,7 +735,7 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 				continue
 			if not is_road:
 				continue
-			if is_tile_occupied(tile):
+			if is_tile_occupied(tile, "character"):
 				continue
 
 			return tile
@@ -554,7 +756,7 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 				continue
 			if is_river and not is_road:
 				continue
-			if is_tile_occupied(tile):
+			if is_tile_occupied(tile, "character"):
 				continue
 
 			return tile
@@ -604,6 +806,7 @@ func check_roadblock(start_tile: Vector2i, end_tile: Vector2i, type: String) -> 
 	return false
 
 func move_closer_to_player(center: Vector2i, type: String) -> Vector2i:
+
 	var valid_tiles = []
 	var best_value = 100
 	var closest_tile = Vector2i(-1, -1)
@@ -624,7 +827,7 @@ func move_closer_to_player(center: Vector2i, type: String) -> Vector2i:
 					continue
 				if is_road:
 					continue
-				if is_tile_occupied(tile):
+				if is_tile_occupied(tile, "character"):
 					continue
 
 			if type == "green_hoplite" or type == "magma_golem":
@@ -634,7 +837,7 @@ func move_closer_to_player(center: Vector2i, type: String) -> Vector2i:
 					continue
 				if not is_road:
 					continue
-				if is_tile_occupied(tile):
+				if is_tile_occupied(tile, "character"):
 					continue
 					
 			if type == "pinky":
@@ -642,7 +845,7 @@ func move_closer_to_player(center: Vector2i, type: String) -> Vector2i:
 					continue
 				if is_river and not is_road:
 					continue
-				if is_tile_occupied(tile):
+				if is_tile_occupied(tile, "character"):
 					continue
 
 			var value = heuristic(tile, player_tile)
@@ -682,7 +885,7 @@ func get_random_bug_eater_tile() -> Vector2i:
 			continue
 		if is_road:
 			continue
-		if is_tile_occupied(tile):
+		if is_tile_occupied(tile, "character"):
 			continue
 
 		return tile
@@ -708,6 +911,7 @@ func bug_eater_move():
 		var current_tile = Map.local_to_map(bug.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
 		if bug.check_player() != Vector2i(-1, -1):
+			bug.add_to_group("fighting")
 			target_tile = move_closer_to_player(current_tile, type)
 		else:
 			target_tile = get_random_tile(current_tile, type)
@@ -743,7 +947,7 @@ func get_random_green_hoplite_tile() -> Vector2i:
 			continue
 		if not is_road:
 			continue
-		if is_tile_occupied(tile):
+		if is_tile_occupied(tile, "character"):
 			continue
 
 		return tile
@@ -768,6 +972,7 @@ func green_hoplite_move():
 		var current_tile = Map.local_to_map(hoplite.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
 		if hoplite.check_player() != Vector2i(-1, -1):
+			hoplite.add_to_group("fighting")
 			target_tile = move_closer_to_player(current_tile, type)
 		else:
 			target_tile = get_random_tile(current_tile, type)
@@ -803,7 +1008,7 @@ func get_random_magma_golem_tile() -> Vector2i:
 			continue
 		if not is_road:
 			continue
-		if is_tile_occupied(tile):
+		if is_tile_occupied(tile, "character"):
 			continue
 
 		return tile
@@ -829,6 +1034,7 @@ func magma_golem_move():
 		var current_tile = Map.local_to_map(golem.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
 		if golem.check_player() != Vector2i(-1, -1):
+			golem.add_to_group("fighting")
 			target_tile = move_closer_to_player(current_tile, type)
 		else:
 			target_tile = get_random_tile(current_tile, type)
@@ -862,7 +1068,7 @@ func get_random_pinky_tile() -> Vector2i:
 			continue
 		if is_river and not is_road:
 			continue
-		if is_tile_occupied(tile):
+		if is_tile_occupied(tile, "character"):
 			continue
 
 		return tile
@@ -887,6 +1093,7 @@ func pinky_move():
 		var current_tile = Map.local_to_map(pinky.global_position)
 		var target_tile: Vector2i = Vector2i(-1, -1)
 		if pinky.check_player() != Vector2i(-1, -1):
+			pinky.add_to_group("fighting")
 			target_tile = move_closer_to_player(current_tile, type)
 		else:
 			target_tile = get_random_tile(current_tile, type)
@@ -960,6 +1167,52 @@ func _on_attack_changed(pressed: bool):
 	else: attack_pressed = false
 	clear_preview()
 	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
+
+func move_compass():
+	if rocket_tile != Vector2i(-1, -1):
+		var rocket_pos = Map.map_to_local(rocket_tile)
+		var player_pos = Player.global_position
+		
+		var direction = (rocket_pos - player_pos).normalized()
+		
+		var angle = direction.angle()
+		UI.Shadow.rotation_degrees = rad_to_deg(angle) + 90
+		
+# -------------------------
+# ROCKET
+# -------------------------
+func launch_rocket():
+	UI.get_node("MapLayer").visible = false
+	
+	prev_player_tile = player_tile
+	await move_there(player_tile, rocket_tile)
+	player_tile = rocket_tile
+	Player.visible = false
+	move_there(player_tile, Vector2i(player_tile.x, player_tile.y-1))
+	
+	Map.set_cell(2, rocket_tile, 3, Vector2i(14, 0))
+	await get_tree().create_timer(1).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(15, 0))
+	await get_tree().create_timer(0.2).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(16, 0))
+	await get_tree().create_timer(0.05).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(17, 0))
+	await get_tree().create_timer(0.2).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(18, 0))
+	await get_tree().create_timer(0.2).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(19, 0))
+	await get_tree().create_timer(0.2).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(20, 0))
+	await get_tree().create_timer(0.2).timeout
+	Map.set_cell(2, rocket_tile, 3, Vector2i(21, 0))
+	Player.z_index = 10
+	Player.visible = true
+	Player.Anim.play("Rocket")
+	flying = true
+	
+	await get_tree().create_timer(5).timeout
+	
+	EndCredit.get_node("MapLayer").visible = true
 
 
 

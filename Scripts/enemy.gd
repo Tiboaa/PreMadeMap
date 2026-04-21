@@ -6,11 +6,17 @@ extends Node2D
 
 var enemy_visible = false
 var current_mode: String = "map"
+var health: int
+var enemy_type: String
+
+
 
 func _ready():
-	pass
-	#print("I spawned")
-	
+	if is_in_group("bug_eater"): enemy_type = "bug_eater"
+	if is_in_group("green_hoplite"): enemy_type = "green_hoplite"
+	if is_in_group("magma_golem"): enemy_type = "magma_golem"
+	if is_in_group("pinky"): enemy_type = "pinky"
+		
 func _process(delta):
 	if current_mode == "map":
 		map_update(delta)
@@ -75,6 +81,11 @@ func move_to_tile(tile: Vector2i, map: TileMap):
 # -------------------------
 # BATTLE LOGIC
 # -------------------------
+
+func start_battle():
+	pass
+
+
 func battle_update(_delta):
 	# combat logic later
 	pass
