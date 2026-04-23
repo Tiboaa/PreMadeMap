@@ -6,6 +6,10 @@ signal pumpjack_changed(pressed: bool)
 signal rocket_changed(pressed: bool)
 signal attack_changed(pressed: bool)
 
+signal basic_atk_changed(pressed: bool)
+signal area_atk_changed(pressed: bool)
+signal heavy_atk_changed(pressed: bool)
+
 @onready var OilCounter = $MapLayer/VBoxContainer/Oil
 @onready var WoodCounter = $MapLayer/VBoxContainer/Wood
 @onready var StoneCounter = $MapLayer/VBoxContainer/Stone
@@ -166,6 +170,7 @@ func _on_basic_atk_toggled(toggled_on):
 		only_one_atk_toggled(BasicAtkBtn)
 	else:
 		BasicAtkBtn.texture = basic_atk
+	emit_signal("basic_atk_changed", toggled_on)
 
 func _on_area_atk_toggled(toggled_on):
 	if toggled_on:
@@ -173,6 +178,7 @@ func _on_area_atk_toggled(toggled_on):
 		only_one_atk_toggled(AreaAtkBtn)
 	else:
 		AreaAtkBtn.texture = area_atk
+	emit_signal("area_atk_changed", toggled_on)
 
 func _on_heavy_atk_toggled(toggled_on):
 	if toggled_on:
@@ -180,3 +186,4 @@ func _on_heavy_atk_toggled(toggled_on):
 		only_one_atk_toggled(HeavyAtkBtn)
 	else:
 		HeavyAtkBtn.texture = heavy_atk
+	emit_signal("heavy_atk_changed", toggled_on)

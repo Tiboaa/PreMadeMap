@@ -74,7 +74,7 @@ animations = [{
 "duration": 5.0,
 "texture": ExtResource("12_ujf3m")
 }],
-"loop": true,
+"loop": false,
 "name": &"Attack",
 "speed": 5.0
 }, {
@@ -127,7 +127,7 @@ animations = [{
 "duration": 5.0,
 "texture": ExtResource("28_s4y4r")
 }],
-"loop": true,
+"loop": false,
 "name": &"HeavyAttack",
 "speed": 5.0
 }, {
@@ -180,3 +180,5 @@ shape = SubResource("RectangleShape2D_qs4cr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SearchBox"]
 shape = SubResource("RectangleShape2D_ejwlr")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_anim_finished"]

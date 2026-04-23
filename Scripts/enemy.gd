@@ -9,13 +9,26 @@ var current_mode: String = "map"
 var health: int
 var enemy_type: String
 
-
+var hit_points: int
+var hurt_points: int
 
 func _ready():
-	if is_in_group("bug_eater"): enemy_type = "bug_eater"
-	if is_in_group("green_hoplite"): enemy_type = "green_hoplite"
-	if is_in_group("magma_golem"): enemy_type = "magma_golem"
-	if is_in_group("pinky"): enemy_type = "pinky"
+	if is_in_group("bug_eater"):
+		enemy_type = "bug_eater"
+		hit_points = 2
+		hurt_points = 2
+	if is_in_group("green_hoplite"):
+		enemy_type = "green_hoplite"
+		hit_points = 8
+		hurt_points = 2
+	if is_in_group("magma_golem"):
+		enemy_type = "magma_golem"
+		hit_points = 8
+		hurt_points = 5
+	if is_in_group("pinky"):
+		enemy_type = "pinky"
+		hit_points = 4
+		hurt_points = 10
 		
 func _process(delta):
 	if current_mode == "map":
@@ -90,3 +103,8 @@ func battle_update(_delta):
 	# combat logic later
 	pass
 
+
+
+func _on_anim_finished():
+	if Anim.animation != "Walk" and Anim.animation != "Idle":
+		Anim.play("Idle")

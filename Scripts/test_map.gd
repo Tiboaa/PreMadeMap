@@ -55,8 +55,8 @@ var flying: bool = false
 var velocity: float = 0.0
 var acceleration: float = 300.0
 
-var max_health = 100
-var health = max_health
+var max_health: int = 100
+var health: int = max_health
 
 var battle_map_open: bool = false
 
@@ -69,7 +69,7 @@ func _ready():
 	
 	spawn_bug_eaters(100)
 	spawn_green_hoplites(30)
-	spawn_magma_golems(10)
+	spawn_magma_golems(100) #10
 	spawn_pinkies(20)
 	player_tile = Map.local_to_map(Player.global_position)
 	prev_player_tile = player_tile
@@ -95,7 +95,6 @@ func _process(delta):
 			Player.global_position.y -= velocity * delta
 		else: move_compass()
 
-		
 
 
 func _unhandled_input(event):
@@ -574,8 +573,8 @@ func draw_preview(route: Array):
 		var current = allowed_route[i]
 		var next = allowed_route[i + 1]
 
-		var atlas: Vector2i = get_direction_tile(prev, current, next)
-		Map.set_cell(3, current, 2, atlas)
+		var coord: Vector2i = get_direction_tile(prev, current, next)
+		Map.set_cell(3, current, 2, coord)
 	
 	max_preview_distance = allowed_route[allowed_route.size()-1]
 	#print("max dISTANCE: ", max_preview_distance)
@@ -586,9 +585,9 @@ func draw_preview(route: Array):
 		var current = route[i]
 		var next = route[i + 1]
 
-		var atlas: Vector2i = get_direction_tile(prev, current, next)
-		atlas = Vector2i(atlas.x + 2, atlas.y)
-		Map.set_cell(3, current, 2, atlas)
+		var coord: Vector2i = get_direction_tile(prev, current, next)
+		coord = Vector2i(coord.x + 2, coord.y)
+		Map.set_cell(3, current, 2, coord)
 
 	preview_route = route
 
@@ -653,7 +652,8 @@ func start_fighting():
 		var battle_scene = preload("res://Scenes/BattleMap.tscn").instantiate()
 		Player.queue_free()
 		add_child(battle_scene)
-		
+		battle_scene.collect_fighters(bug_num, hoplite_num, golem_num, pinky_num)
+		battle_scene.spawn_fighters()
 	#battle_scene.setup(bug_num, hoplite_num, golem_num, pinky_num)
 
 func enemy_moving(enemy, target_tile):
@@ -720,8 +720,8 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 	if type == "magma_golem":
 		while attempts < 100:
 			attempts += 1
-			var offset_x = randi() % 5 - 4
-			var offset_y = randi() % 5 - 4
+			var offset_x = randi() % 5 - 2
+			var offset_y = randi() % 5 - 2
 			var tile = center + Vector2i(offset_x, offset_y)
 
 			var data = map_data[tile.x][tile.y]
@@ -743,8 +743,8 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 	if type == "pinky":
 		while attempts < 100:
 			attempts += 1
-			var offset_x = randi() % 11 - 4
-			var offset_y = randi() % 11 - 4
+			var offset_x = randi() % 11 - 6
+			var offset_y = randi() % 11 - 6
 			var tile = center + Vector2i(offset_x, offset_y)
 
 			var data = map_data[tile.x][tile.y]

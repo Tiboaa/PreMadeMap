@@ -3,20 +3,28 @@ extends Node2D
 @onready var EnemyDetection = $%EnemyDetection
 @onready var Visible = $%Visible
 @onready var Anim = $AnimatedSprite2D
+@onready var MainScene = get_tree().current_scene
 
 var player_pos
 var player_clicked: bool = false
 var max_movement_points: int = 10
 var movement_points: int = max_movement_points
+var max_battle_movement_points: int = 4
+var battle_movement_points: int = max_battle_movement_points
 var speed = 200
 
+var max_health: int
+var health: int
 
 
 func _ready():
 	Anim.play("Idle")
+	max_health = MainScene.max_health
+	health = MainScene.health
 	
 func _process(_delta):
-	pass
+	max_health = MainScene.max_health
+	health = MainScene.health
 
 
 func tile_clicked(map_tile):
