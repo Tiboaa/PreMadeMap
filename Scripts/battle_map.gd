@@ -56,6 +56,10 @@ func _ready():
 	UI.basic_atk_changed.connect(_on_basic_changed)
 	UI.area_atk_changed.connect(_on_area_changed)
 	UI.heavy_atk_changed.connect(_on_heavy_changed)
+	health_update()
+	player_tile = CurrentMap.map_to_local(get_random_enemy_tile())
+	Player.global_position = CurrentMap.to_global(player_tile)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -78,9 +82,6 @@ func _input(event):
 					#CurrentMap.set_cell(1, current_map_tile, 2, Vector2i(6, 6))
 				if prev_map_tile != current_map_tile and prev_map_tile != CurrentMap.local_to_map(Player.position):
 					CurrentMap.set_cell(1, prev_map_tile, -1)
-					
-### WHEN I DRAW THE PREVIEW SO HERE
-
 					
 			elif basic_atk_selected:
 				if not Player.player_clicked: # MIGH BE REDUNDANT
@@ -117,16 +118,24 @@ func _input(event):
 				var map_tile_clicked: Vector2i = CurrentMap.local_to_map(click_pos)
 				if basic_atk_selected:
 					if CurrentMap.local_to_map(Player.position) == map_tile_clicked:
-						print("player clicked 8")
+						#print("player clicked 8")
 						Player.player_clicked = true
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 					else:
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 						await get_tree().create_timer(0.5).timeout
 						CurrentMap.set_cell(1, map_tile_clicked, -1)
+						
+						var clicked_enemy = get_enemy_on_tile(map_tile_clicked)
+						if clicked_enemy != null:
+							hurt_the_enemy(clicked_enemy, 2)
+						else:
+							return
+						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
+						
 					basic_atk_selected = false
 					UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
 					
@@ -142,15 +151,26 @@ func _input(event):
 						await get_tree().create_timer(0.2).timeout
 						for i in area:
 							CurrentMap.set_cell(1, i, -1)
+							
+						var enemies_hurt: int = 0
+						for i in area:
+							var clicked_enemy = get_enemy_on_tile(i)
+							if clicked_enemy != null:
+								hurt_the_enemy(clicked_enemy, 1)
+								enemies_hurt += 1
+						if enemies_hurt == 0:
+							return
+						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
+						
 					area_atk_selected = false
 					UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
 				
 				if heavy_atk_selected:
 					if CurrentMap.local_to_map(Player.position) == map_tile_clicked:
-						print("player clicked 13")
+						#print("player clicked 13")
 						Player.player_clicked = true
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 					else :
@@ -158,9 +178,17 @@ func _input(event):
 						CurrentMap.set_cell(1, attacked_tile, 2, Vector2i(5, 6))
 						await get_tree().create_timer(0.5).timeout
 						CurrentMap.set_cell(1, attacked_tile, -1)
+						
+						var clicked_enemy = get_enemy_on_tile(attacked_tile)
+						if clicked_enemy != null:
+							hurt_the_enemy(clicked_enemy, 4)
+						else: 
+							return
+						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
+						
 					area_atk_selected = false
 					UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
 						
@@ -169,8 +197,10 @@ func _input(event):
 
 			var click_pos: Vector2 = CurrentMap.to_local(get_global_mouse_position())
 			var map_tile_clicked: Vector2i = CurrentMap.local_to_map(click_pos)
+			
+			#FEELS POINTLESS BUT JUST IN CASE
 			if is_tile_off_map(map_tile_clicked) and Player.player_clicked:
-			#MAYEBE DELETE THIS LATER
+			
 				CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 				await get_tree().create_timer(0.5).timeout
 				CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(-1, -1))
@@ -194,7 +224,7 @@ func _input(event):
 				#CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(-1, -1))
 
 				Player.player_clicked = false
-				print(map_tile_clicked)
+				#print(map_tile_clicked)
 				
 				await move_there(CurrentMap.local_to_map(Player.position), move_there_tile)
 				player_tile = CurrentMap.local_to_map(Player.position)
@@ -207,6 +237,10 @@ func _input(event):
 					enemies_moving = false
 				player_moving = false
 				prev_player_tile = player_tile
+	enemies_moving = false
+	player_moving = false
+	if enemy_number <= 0:
+		all_enemies_killed(false)
 
 func get_preview_path(start_tile: Vector2i, destination: Vector2i) -> Array:
 	var open_set = [start_tile]
@@ -542,12 +576,12 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 			var offset_y = randi() % 7 - 3
 			var tile = center + Vector2i(offset_x, offset_y)
 
+			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
+				continue
 			var data = map_data[tile.x][tile.y]
 			var ground_type = data[0]
 			var is_river = data[1]
 			var is_road = data[2]
-			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
-				continue
 			if ground_type != "grass":
 				continue
 			if is_river and not is_road:
@@ -566,12 +600,12 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 			var offset_y = randi() % 5 - 2
 			var tile = center + Vector2i(offset_x, offset_y)
 
+			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
+				continue
 			var data = map_data[tile.x][tile.y]
 			var ground_type = data[0]
 			var is_river = data[1]
 			var is_road = data[2]
-			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
-				continue
 			if ground_type != "grass":
 				continue
 			if is_river and not is_road:
@@ -590,12 +624,13 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 			var offset_y = randi() % 5 - 2
 			var tile = center + Vector2i(offset_x, offset_y)
 
+
+			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
+				continue
 			var data = map_data[tile.x][tile.y]
 			var ground_type = data[0]
 			var is_river = data[1]
 			var is_road = data[2]
-			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
-				continue
 			if ground_type != "grass":
 				continue
 			if is_river and not is_road:
@@ -614,12 +649,12 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 			var offset_y = randi() % 9 - 4
 			var tile = center + Vector2i(offset_x, offset_y)
 
+			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
+				continue
 			var data = map_data[tile.x][tile.y]
 			var ground_type = data[0]
 			var is_river = data[1]
 			var is_road = data[2]
-			if tile.x < 0 or tile.y < 0 or tile.x >= 12 or tile.y >= 6:
-				continue
 			if ground_type != "grass":
 				continue
 			if is_river and not is_road:
@@ -632,7 +667,7 @@ func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 			return tile
 
 	return Vector2i(-1, -1)
-	
+
 func spawn_fighters():
 	for b in bug_number:
 		enemy_number += 1
@@ -679,10 +714,11 @@ func spawn_fighters():
 			add_child(pinky)
 			pinky.set_mode("battle")
 			pinky.add_to_group("fighting")
-			
 
 func move_the_enemies():
 	for enemy in get_tree().get_nodes_in_group("fighting"):
+		if not is_instance_valid(enemy):
+			continue
 		if enemy.is_in_group("bug_eater"):
 			var where_is_player = enemy.check_player()
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
@@ -695,11 +731,11 @@ func move_the_enemies():
 					var option = randi() % 2
 					if option == 0:
 						enemy.Anim.play("Bite")
-						MainScene.health -= enemy.hit_points + (randi() % 2 - 1)
+						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 					if option == 1:
 						enemy.Anim.play("Slam")
-						MainScene.health -= enemy.hit_points * 2 + (randi() % 2 - 1)
+						Player.health -= enemy.hurt_points * 2 + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 
 				else:
@@ -710,35 +746,36 @@ func move_the_enemies():
 		if enemy.is_in_group("green_hoplite"):
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
 			if player_tile.y != enemy_tile.y:
-				print("should move")
 				var tile_option: Vector2i
 				var found_the_tile: bool = false
 				for i in enemy_tile.x:
 					tile_option = Vector2i(enemy_tile.x, player_tile.y + i)
-					print("really should move ", i)
+					#print("really should move ", i)
 					if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
 						enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
-						print("moved")
+						#print("moved")
 						found_the_tile = true
 						break
 					tile_option = Vector2i(enemy_tile.x, player_tile.y - i)
 					if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
 						enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
-						print("moved")
+						#print("moved")
 						found_the_tile = true
 						break
+				if not found_the_tile:
+					enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "green_hoplite")))
 			else:
-				print("should attack")
+				#print("should attack")
 				var option = randi() % 3
 				if option == 0:
-					print("attack")
+					#print("attack")
 					enemy.Anim.play("Attack")
-					MainScene.health -= enemy.hit_points + (randi() % 2 - 1)
+					Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 					await enemy.Anim.animation_finished
 				else:
-					print("ap attack")
+					#print("ap attack")
 					enemy.Anim.play("ApAttack")
-					MainScene.health -= enemy.hit_points * 3 + (randi() % 21 - 10)
+					Player.health -= enemy.hurt_points * 3 + (randi() % 21 - 10)
 					await enemy.Anim.animation_finished
 		
 		if enemy.is_in_group("magma_golem"):
@@ -765,16 +802,73 @@ func move_the_enemies():
 								break
 					else:
 						enemy.Anim.play("Attack")
-						MainScene.health -= enemy.hit_points + (randi() % 2 - 1)
+						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 				if option == 1:
 					enemy.Anim.play("HeavyAttack")
-					MainScene.health -= enemy.hit_points * 2 + (randi() % 5 - 2)
+					Player.health -= enemy.hurt_points * 2 + (randi() % 5 - 2)
 					await enemy.Anim.animation_finished
 			
+		if enemy.is_in_group("pinky"):
+			var where_is_player = enemy.check_player()
+			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
+			if where_is_player == Vector2i(-1, -1):
+				print("pinky should move to random tile")
+				enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "pinky")))
+				
+			else:
+				var next_to_player = get_neighbors(player_tile)
+				if enemy_tile in next_to_player:
+					var option = randi() % 4
+					if option == 0:
+						enemy.Anim.play("Bite")
+						Player.health -= enemy.hurt_points * 5 + (randi() % 11 - 5)
+						await enemy.Anim.animation_finished
+					if option > 0:
+						enemy.Anim.play("Slap")
+						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
+						await enemy.Anim.animation_finished
+
+				else:
+					for i in next_to_player:
+						if not is_tile_occupied(i, "character") and not is_tile_off_map(i):
+							enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(i))
 		
 		health_update()
+
+func get_enemy_on_tile(tile: Vector2i):
+	for enemy in get_tree().get_nodes_in_group("fighting"):
+		var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
+		if enemy_tile == tile and not is_tile_off_map(tile):
+			return enemy
+	return null
+
+func hurt_the_enemy(enemy, damage):
+	#PLAY PLAYER ANIM
+	enemy.hit_points -= damage
+	var is_dead: bool = enemy.battle_update()
+	if is_dead:
+		enemy_number -= 1
+		enemy.queue_free()
 		
+func all_enemies_killed(dead):
+	if not dead:
+		print("killed all")
+		UI.Survived.visible = true
+	else:
+		UI.Death.visible = true
+		MainScene.wood_resource = 0
+		MainScene.stone_resource = 0
+		MainScene.iron_resource = 0
+		MainScene.minerals_resource = 0
+		MainScene.oil_resource = 0
+		UI.update_resources()
+	await get_tree().create_timer(2).timeout
+	UI.Survived.visible = false
+	UI.Death.visible = false
+	MainScene.Map.visible = true
+	await MainScene.add_player()
+	queue_free()
 # -------------------------
 # UI
 # -------------------------
@@ -833,7 +927,7 @@ func _on_heavy_changed(pressed: bool):
 		CurrentMap.set_cell(1, player_tile, -1)
 
 func health_update():
-	UI.HealthBar.value = MainScene.health
+	UI.HealthBar.value = Player.health
 
 
 

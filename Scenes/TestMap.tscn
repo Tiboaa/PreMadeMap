@@ -308,15 +308,15 @@ layer_2/tile_data = PackedInt32Array(2752582, 1, 0, 2752581, 589825, 0, 2818117,
 layer_3/name = "Movement Lines"
 layer_3/tile_data = PackedInt32Array()
 
-[node name="Player" parent="." instance=ExtResource("4_pj0na")]
-position = Vector2(1782, 902)
-
 [node name="BasicUI" parent="." instance=ExtResource("4_al6vg")]
 
 [node name="EndCredit" parent="." instance=ExtResource("8_yg6qe")]
 
 [node name="CanvasLayer" parent="EndCredit" index="0"]
 visible = false
+
+[node name="Player" parent="." instance=ExtResource("4_pj0na")]
+position = Vector2(1782, 902)
 
 [editable path="EndCredit"]
 [editable path="EndCredit/CanvasLayer/MainMenuBtn"]

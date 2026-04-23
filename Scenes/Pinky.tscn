@@ -169,7 +169,7 @@ script = ExtResource("1_sow0g")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_3ke1x")
-animation = &"Slap"
+animation = &"Bite"
 
 [node name="HurtBox" type="Area2D" parent="."]
 

@@ -9,32 +9,33 @@ var current_mode: String = "map"
 var health: int
 var enemy_type: String
 
+var max_hit_points: int
 var hit_points: int
 var hurt_points: int
 
 func _ready():
 	if is_in_group("bug_eater"):
 		enemy_type = "bug_eater"
-		hit_points = 2
+		max_hit_points = 1
 		hurt_points = 2
 	if is_in_group("green_hoplite"):
 		enemy_type = "green_hoplite"
-		hit_points = 8
+		max_hit_points = 5
 		hurt_points = 2
 	if is_in_group("magma_golem"):
 		enemy_type = "magma_golem"
-		hit_points = 8
+		max_hit_points = 8
 		hurt_points = 5
 	if is_in_group("pinky"):
 		enemy_type = "pinky"
-		hit_points = 4
+		max_hit_points = 2
 		hurt_points = 10
-		
+
+	hit_points = max_hit_points
+
 func _process(delta):
 	if current_mode == "map":
 		map_update(delta)
-	elif current_mode == "battle":
-		battle_update(delta)
 
 # -------------------------
 # MODE SWITCH
@@ -68,7 +69,7 @@ func check_player() -> Vector2i:
 	for area in SearchBox.get_overlapping_areas():
 		if area.name == "PlayerHurtBox":
 			var player = area.get_parent()
-			print("Player detected:", player.global_position)
+			#print("Player detected:", player.global_position)
 			return player.global_position
 
 	return Vector2i(-1, -1)
@@ -95,13 +96,13 @@ func move_to_tile(tile: Vector2i, map: TileMap):
 # BATTLE LOGIC
 # -------------------------
 
-func start_battle():
-	pass
-
-
-func battle_update(_delta):
-	# combat logic later
-	pass
+func battle_update() -> bool:
+	print("battle update called")
+	if hit_points <= 0:
+		print(hit_points)
+		return true
+		#remove_from_group("fighting")
+	return false
 
 
 

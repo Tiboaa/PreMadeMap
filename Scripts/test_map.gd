@@ -12,8 +12,8 @@ var BugEaterScene = preload("res://Scenes/BugEater.tscn")
 var GreenHopliteScene = preload("res://Scenes/GreenHoplite.tscn")
 var MagmaGolemScene = preload("res://Scenes/MagmaGolem.tscn")
 var PinkyScene = preload("res://Scenes/Pinky.tscn")
-#ground expandable x way for bioms
-#resources expandable y way for different resources
+var PlayerScene = preload("res://Scenes/Player.tscn")
+
 @onready var map_size = Map.get_used_rect().size
 @onready var Player = $Player
 var map_data = []
@@ -69,7 +69,7 @@ func _ready():
 	
 	spawn_bug_eaters(100)
 	spawn_green_hoplites(30)
-	spawn_magma_golems(100) #10
+	spawn_magma_golems(10)
 	spawn_pinkies(20)
 	player_tile = Map.local_to_map(Player.global_position)
 	prev_player_tile = player_tile
@@ -421,6 +421,17 @@ func save_map_to_txt():
 # -------------------------
 # PLAYER MOVEMENT
 # -------------------------
+func add_player():
+	Player = PlayerScene.instantiate()
+	var tile = player_tile
+	var pos = Map.map_to_local(tile)
+
+	Player.global_position = pos
+	add_child(Player)
+	battle_map_open = false
+	UI.get_node("MapLayer").visible = true
+	UI.get_node("BattleLayer").visible = false
+####
 
 func move_there(start_tile: Vector2i, destination: Vector2i):
 	var is_water = map_data[destination.x][destination.y][5] == 100
@@ -654,6 +665,7 @@ func start_fighting():
 		add_child(battle_scene)
 		battle_scene.collect_fighters(bug_num, hoplite_num, golem_num, pinky_num)
 		battle_scene.spawn_fighters()
+		battle_scene.move_the_enemies()
 	#battle_scene.setup(bug_num, hoplite_num, golem_num, pinky_num)
 
 func enemy_moving(enemy, target_tile):

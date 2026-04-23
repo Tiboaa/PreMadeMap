@@ -290,6 +290,42 @@ offset_right = 1152.0
 offset_bottom = 18.0
 text = "FPS: 000"
 
+[node name="Survived" type="Label" parent="BattleLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -9.0
+offset_right = 20.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 88
+text = "YOU SURVIVED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Death" type="Label" parent="BattleLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -9.0
+offset_right = 20.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 88
+text = "YOU LOST EVERYTHING"
+
 [connection signal="toggled" from="MapLayer/MapToolbelt/Axe/Button" to="." method="_on_axe_toggled"]
 [connection signal="toggled" from="MapLayer/MapToolbelt/Pickaxe/Button" to="." method="_on_pickaxe_toggled"]
 [connection signal="toggled" from="MapLayer/MapToolbelt/Pumpjack/Button" to="." method="_on_pumpjack_toggled"]
@@ -298,6 +334,7 @@ text = "FPS: 000"
 [connection signal="toggled" from="BattleLayer/BattleToolbelt/BasicAtk/Button" to="." method="_on_basic_atk_toggled"]
 [connection signal="toggled" from="BattleLayer/BattleToolbelt/AreaAtk/Button" to="." method="_on_area_atk_toggled"]
 [connection signal="toggled" from="BattleLayer/BattleToolbelt/HeavyAtk/Button" to="." method="_on_heavy_atk_toggled"]
+[connection signal="value_changed" from="BattleLayer/HealthBar" to="." method="_on_damage_taken"]
 
 [editable path="MapLayer/MapToolbelt/Axe"]
 [editable path="MapLayer/MapToolbelt/Pickaxe"]

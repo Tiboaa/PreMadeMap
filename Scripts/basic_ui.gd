@@ -32,6 +32,9 @@ signal heavy_atk_changed(pressed: bool)
 @onready var AreaAtkBtn = $%AreaAtk
 @onready var HeavyAtkBtn = $%HeavyAtk
 
+@onready var Survived = $%Survived
+@onready var Death = $%Death
+
 @onready var HealthBar = $%HealthBar
 
 @onready var MainScene = get_tree().current_scene
@@ -65,6 +68,8 @@ func _ready():
 	
 	HealthBar.max_value = MainScene.max_health
 	HealthBar.value = MainScene.health
+	Survived.visible = false
+	Death.visible = false
 
 func _process(_delta):
 	var fps: float = Engine.get_frames_per_second()
@@ -187,3 +192,11 @@ func _on_heavy_atk_toggled(toggled_on):
 	else:
 		HeavyAtkBtn.texture = heavy_atk
 	emit_signal("heavy_atk_changed", toggled_on)
+
+
+func _on_damage_taken(value):
+	if value <= 0:
+		print("should go there")
+		var dead = true
+		MainScene.get_node("BattleMap").all_enemies_killed(dead)
+		
