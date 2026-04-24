@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwtj8kp1ciddx"
-path="res://.godot/imported/132x132_simple_roads_and_rivers.png-a78d5cd03038309114f2a17f806dcdc7.ctex"
+uid="uid://cy733fojkp4qu"
+path="res://.godot/imported/132x132_simple_roads_and_rivers_2.png-72dbb115b320801ea83e75e00c0f7b22.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Map/132x132_simple_roads_and_rivers.png"
-dest_files=["res://.godot/imported/132x132_simple_roads_and_rivers.png-a78d5cd03038309114f2a17f806dcdc7.ctex"]
+source_file="res://Art/Map/132x132_simple_roads_and_rivers_2.png"
+dest_files=["res://.godot/imported/132x132_simple_roads_and_rivers_2.png-72dbb115b320801ea83e75e00c0f7b22.ctex"]
 
 [params]
 

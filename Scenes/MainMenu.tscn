@@ -58,7 +58,9 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 78
-text = "ADVENTURE GAME"
+text = "ADVENTURE GAME
+Escape with
+the Spaceship"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -70,6 +72,7 @@ texture = ExtResource("3_q0nl1")
 text = "New Game"
 
 [node name="LoadGame" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+visible = false
 layout_mode = 2
 texture = ExtResource("3_q0nl1")
 
@@ -78,6 +81,7 @@ text = "Load Game
 "
 
 [node name="Settings" parent="CanvasLayer/TextureRect/VBoxContainer" instance=ExtResource("2_dpde2")]
+visible = false
 layout_mode = 2
 texture = ExtResource("3_q0nl1")
 

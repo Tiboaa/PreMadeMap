@@ -57,8 +57,8 @@ func _ready():
 	UI.area_atk_changed.connect(_on_area_changed)
 	UI.heavy_atk_changed.connect(_on_heavy_changed)
 	health_update()
-	player_tile = CurrentMap.map_to_local(get_random_enemy_tile())
-	Player.global_position = CurrentMap.to_global(player_tile)
+	player_tile = Vector2i(2, 2)#CurrentMap.to_local(Vector2i(randi_range(0,5), randi_range(0,5)))
+	#Player.global_position = player_tile#CurrentMap.to_global(player_tile)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

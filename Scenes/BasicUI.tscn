@@ -75,9 +75,9 @@ offset_bottom = 40.0
 
 [node name="TextureRect" type="TextureRect" parent="MapLayer/MapToolbelt"]
 layout_mode = 0
-offset_left = 353.0
+offset_left = 397.0
 offset_top = 528.0
-offset_right = 800.0
+offset_right = 756.0
 offset_bottom = 623.0
 mouse_filter = 0
 texture = ExtResource("2_wexfq")
@@ -85,9 +85,9 @@ texture = ExtResource("2_wexfq")
 [node name="Axe" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 358.0
+offset_left = 402.0
 offset_top = 533.0
-offset_right = 443.0
+offset_right = 487.0
 offset_bottom = 618.0
 texture = ExtResource("4_vuhv6")
 
@@ -98,9 +98,9 @@ text = ""
 [node name="Pickaxe" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 446.0
+offset_left = 489.0
 offset_top = 533.0
-offset_right = 531.0
+offset_right = 574.0
 offset_bottom = 618.0
 texture = ExtResource("5_m7qpf")
 
@@ -111,9 +111,9 @@ text = ""
 [node name="Pumpjack" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 534.0
+offset_left = 577.0
 offset_top = 533.0
-offset_right = 619.0
+offset_right = 662.0
 offset_bottom = 618.0
 texture = ExtResource("6_j437a")
 
@@ -124,9 +124,9 @@ text = ""
 [node name="Rocket" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 622.0
+offset_left = 665.0
 offset_top = 533.0
-offset_right = 707.0
+offset_right = 750.0
 offset_bottom = 618.0
 texture = ExtResource("7_r858a")
 
@@ -136,6 +136,7 @@ text = ""
 
 [node name="Attack" parent="MapLayer/MapToolbelt" instance=ExtResource("3_ad7cy")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = 710.0
 offset_top = 533.0
@@ -173,6 +174,36 @@ layout_mode = 0
 offset_right = 112.0
 offset_bottom = 112.0
 texture = ExtResource("15_f68rv")
+
+[node name="NotEnough" type="Label" parent="MapLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = 166.0
+offset_right = 254.0
+offset_bottom = 201.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "Not enough resources"
+
+[node name="TooFar" type="Label" parent="MapLayer"]
+unique_name_in_owner = true
+visible = false
+offset_left = 443.0
+offset_top = 490.0
+offset_right = 705.0
+offset_bottom = 525.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "Can't do that here"
+horizontal_alignment = 1
 
 [node name="BattleLayer" type="CanvasLayer" parent="."]
 visible = false

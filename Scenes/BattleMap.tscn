@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://ca20h60hqfcg5"]
 
-[ext_resource type="Texture2D" uid="uid://b2pvx2jq5mgan" path="res://Art/Map/132x132_simple_roads_and_rivers.png" id="1_8qtqw"]
+[ext_resource type="Texture2D" uid="uid://cwtj8kp1ciddx" path="res://Art/Map/132x132_simple_roads_and_rivers.png" id="1_8qtqw"]
 [ext_resource type="Script" path="res://Scripts/battle_map.gd" id="1_hyyw8"]
 [ext_resource type="Texture2D" uid="uid://d34wokpfnpcw6" path="res://Art/Map/44x44_battlemap_borders.png" id="2_qxfso"]
 [ext_resource type="PackedScene" uid="uid://bthuua7v322w4" path="res://Scenes/Player.tscn" id="4_74kk2"]
@@ -374,4 +374,4 @@ layer_1/tile_data = PackedInt32Array()
 position = Vector2(261.5, 156.167)
 
 [node name="Player" parent="." instance=ExtResource("4_74kk2")]
-position = Vector2(22, 22)
+position = Vector2(110, 110)

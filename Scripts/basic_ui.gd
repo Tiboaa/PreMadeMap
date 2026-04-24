@@ -4,7 +4,6 @@ signal axe_changed(pressed: bool)
 signal pickaxe_changed(pressed: bool)
 signal pumpjack_changed(pressed: bool)
 signal rocket_changed(pressed: bool)
-signal attack_changed(pressed: bool)
 
 signal basic_atk_changed(pressed: bool)
 signal area_atk_changed(pressed: bool)
@@ -22,7 +21,6 @@ signal heavy_atk_changed(pressed: bool)
 @onready var PickaxeBtn = $%Pickaxe
 @onready var PumpjackBtn = $%Pumpjack
 @onready var RocketBtn = $%Rocket
-@onready var AttackBtn = $%Attack
 
 @onready var Shadow = $%Shadow
 @onready var Needle = $%Needle
@@ -37,6 +35,9 @@ signal heavy_atk_changed(pressed: bool)
 
 @onready var HealthBar = $%HealthBar
 
+@onready var NotEnough = $%NotEnough
+@onready var TooFar = $%TooFar
+
 @onready var MainScene = get_tree().current_scene
 
 @onready var axe = preload("res://Art/Ui/85x85_ui_buttons_1.png")
@@ -47,8 +48,6 @@ signal heavy_atk_changed(pressed: bool)
 @onready var pumpjack_clicked = preload("res://Art/Ui/85x85_ui_buttons_clicked_3.png")
 @onready var rocket = preload("res://Art/Ui/85x85_ui_buttons_4.png")
 @onready var rocket_clicked = preload("res://Art/Ui/85x85_ui_buttons_clicked_4.png")
-@onready var attack = preload("res://Art/Ui/85x85_ui_buttons_5.png")
-@onready var attack_clicked = preload("res://Art/Ui/85x85_ui_buttons_clicked_5.png")
 
 @onready var basic_atk = preload("res://Art/Ui/85x110_ui_buttons_battle_1.png")
 @onready var basic_atk_clicked = preload("res://Art/Ui/85x110_ui_buttons_battle_clicked_1.png")
@@ -92,7 +91,7 @@ func update_resources():
 # MAP TOOLBELT
 # -------------------------
 func only_one_toggled(button):
-	var buttons = [AxeBtn, PickaxeBtn, PumpjackBtn, RocketBtn, AttackBtn]
+	var buttons = [AxeBtn, PickaxeBtn, PumpjackBtn, RocketBtn]
 
 	for i in buttons:
 		var btn = i.get_node("Button")
@@ -105,7 +104,6 @@ func only_one_toggled(button):
 				PickaxeBtn: i.texture = pickaxe
 				PumpjackBtn: i.texture = pumpjack
 				RocketBtn: i.texture = rocket
-				AttackBtn: i.texture = attack
 
 
 func _on_axe_toggled(toggled_on):
@@ -141,14 +139,6 @@ func _on_rocket_toggled(toggled_on):
 	else:
 		RocketBtn.texture = rocket
 	emit_signal("rocket_changed", toggled_on)
-
-func _on_attack_toggled(toggled_on):
-	if toggled_on:
-		AttackBtn.texture = attack_clicked
-		only_one_toggled(AttackBtn)
-	else:
-		AttackBtn.texture = attack
-	emit_signal("attack_changed", toggled_on)
 
 # -------------------------
 # BATTLE TOOLBELT

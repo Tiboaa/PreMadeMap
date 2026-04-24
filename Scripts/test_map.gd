@@ -23,7 +23,7 @@ var max_preview_distance: Vector2i = Vector2i(-1, -1)
 
 var prev_map_tile: Vector2i
 var prev_player_tile: Vector2i
-var player_tile: Vector2i
+var player_tile: Vector2i = Vector2i(-1, -1)
 var bugs_moving: bool = false
 var hoplites_moving: bool = false
 var golems_moving: bool = false
@@ -33,7 +33,6 @@ var axe_pressed: bool = false
 var pickaxe_pressed: bool = false
 var pumpjack_pressed: bool = false
 var rocket_pressed: bool = false
-var attack_pressed: bool = false
 
 var wood_resource: int
 var stone_resource: int
@@ -71,14 +70,15 @@ func _ready():
 	spawn_green_hoplites(30)
 	spawn_magma_golems(10)
 	spawn_pinkies(20)
-	player_tile = Map.local_to_map(Player.global_position)
+	while player_tile == Vector2i(-1, -1) or map_data[player_tile.x][player_tile.y][0].contains("ocean"):
+		Player.global_position = Map.map_to_local(Vector2i(randi_range(50, 90), randi_range(50, 90)))
+		player_tile = Map.local_to_map(Player.global_position)
 	prev_player_tile = player_tile
 	
 	UI.axe_changed.connect(_on_axe_changed)
 	UI.pickaxe_changed.connect(_on_pickaxe_changed)
 	UI.pumpjack_changed.connect(_on_pumpjack_changed)
 	UI.rocket_changed.connect(_on_rocket_changed)
-	UI.attack_changed.connect(_on_attack_changed)
 	
 	wood_resource = 0
 	stone_resource = 0
@@ -113,13 +113,8 @@ func _unhandled_input(event):
 			if prev_map_tile != null and prev_map_tile != current_map_tile and prev_map_tile != Map.local_to_map(Player.global_position):
 				Map.set_cell(1, prev_map_tile, 1, Vector2i(-1, -1))
 			prev_map_tile = current_map_tile
-			if attack_pressed:
-				var route = get_preview_path(Map.local_to_map(Player.global_position), current_map_tile)
-
-				if route.size() > 0:
-					draw_preview(route)
 			
-		if axe_pressed or pickaxe_pressed or pumpjack_pressed or rocket_pressed or attack_pressed:
+		if axe_pressed or pickaxe_pressed or pumpjack_pressed or rocket_pressed:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				var click_pos: Vector2 = get_global_mouse_position()
 				var map_tile_clicked: Vector2i = Map.local_to_map(click_pos)
@@ -137,9 +132,6 @@ func _unhandled_input(event):
 					if rocket_pressed:
 						rocket_pressed = false
 						UI.get_node("MapLayer/MapToolbelt/Rocket/Button").button_pressed = false
-					if attack_pressed:
-						attack_pressed = false
-						UI.get_node("MapLayer/MapToolbelt/Attack/Button").button_pressed = false
 					Map.set_cell(1, player_tile, 1, Vector2i(5, 6))
 				elif abs(map_tile_clicked.x - player_tile.x) <= 1 and abs(map_tile_clicked.y - player_tile.y) <= 1:
 					var cta_coords: Vector2i = Map.get_cell_atlas_coords(2, map_tile_clicked) #current tile atlas
@@ -159,6 +151,10 @@ func _unhandled_input(event):
 								else:
 									Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x+1, cta_coords.y+6))
 								wood_resource += 10
+						else:
+							UI.TooFar.visible = true
+							await get_tree().create_timer(2).timeout
+							UI.TooFar.visible = false
 						UI.update_resources()
 					if pickaxe_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
@@ -186,6 +182,10 @@ func _unhandled_input(event):
 										iron_resource += 10
 									"minerals":
 										minerals_resource += 10
+						else:
+							UI.TooFar.visible = true
+							await get_tree().create_timer(2).timeout
+							UI.TooFar.visible = false
 						UI.update_resources()
 					if pumpjack_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
@@ -200,6 +200,11 @@ func _unhandled_input(event):
 								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
 								Map.set_cell(2, map_tile_clicked, 1, Vector2i(cta_coords.x, cta_coords.y+1))
 								oil_resource += 10
+						
+						else:
+							UI.TooFar.visible = true
+							await get_tree().create_timer(2).timeout
+							UI.TooFar.visible = false
 						UI.update_resources()
 					if rocket_pressed:
 						Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
@@ -221,9 +226,13 @@ func _unhandled_input(event):
 										map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
 							elif rocket_level % 2 == 0:
 								if iron_cost > iron_resource:
-									print("not enough iron")
+									UI.NotEnough.visible = true
+									await get_tree().create_timer(2).timeout
+									UI.NotEnough.visible = false
 								if minerals_cost > minerals_resource:
-									print("not enough minerals")
+									UI.NotEnough.visible = true
+									await get_tree().create_timer(2).timeout
+									UI.NotEnough.visible = false
 									
 							if rocket_level % 2 == 1 and wood_cost <= wood_resource:
 								wood_resource -= wood_cost
@@ -239,7 +248,9 @@ func _unhandled_input(event):
 									if rocket_level == 13:
 										map_data[map_tile_clicked.x][map_tile_clicked.y][4] = false
 							elif rocket_level % 2 == 1:
-								print("not enough wood") 
+								UI.NotEnough.visible = true
+								await get_tree().create_timer(2).timeout
+								UI.NotEnough.visible = false
 								
 						elif map_data[map_tile_clicked.x][map_tile_clicked.y] == ["grass",false,false,"rocket",false,2] and rocket_tile == map_tile_clicked:
 							print("rocket is ready to launch")
@@ -257,27 +268,11 @@ func _unhandled_input(event):
 								map_data[map_tile_clicked.x][map_tile_clicked.y][4] = true
 							else:
 								print("Not enough stone to build")
-				if attack_pressed:
-					Map.set_cell(1, map_tile_clicked, 1, Vector2i(5, 6))
-					if is_tile_occupied(map_tile_clicked, "enemy"):
-						await move_there(player_tile, map_tile_clicked)
-						player_tile = Map.local_to_map(Player.global_position) 
-						clear_preview()
-						
-						#HERE
-						for enemy in get_tree().get_nodes_in_group("enemy"):
-							if enemy.check_player() != Vector2i(-1, -1):
-								enemy.add_to_group("fighting")
-						attack_pressed = false
-						UI.get_node("MapLayer/MapToolbelt/Attack/Button").button_pressed = false
-						#await get_tree().create_timer(0.5).timeout
-						#Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
-						print("Enemy attacked")
-						start_fighting()
-					await get_tree().create_timer(0.5).timeout
-					Map.set_cell(1, map_tile_clicked, 1, Vector2i(-1, -1))
-					# CALL BATTLE MAP WITH Player.get_node("EnemyDetection")
-		
+						else:
+							UI.TooFar.visible = true
+							await get_tree().create_timer(2).timeout
+							UI.TooFar.visible = false
+
 		else:
 			if event is InputEventMouseMotion and Player.player_clicked:
 				var current_map_tile: Vector2i = Map.local_to_map(get_global_mouse_position())
@@ -323,6 +318,10 @@ func _unhandled_input(event):
 # -------------------------
 # MAP GENERATION
 # -------------------------
+
+func random_generate_map():
+	pass
+
 
 func generate_map():
 	map_data.clear()
@@ -512,10 +511,7 @@ func get_neighbors(tile: Vector2i):
 	var neighbor_east = Vector2i(tile.x + 1, tile.y)
 	var neighbor_south = Vector2i(tile.x, tile.y + 1)
 	var neighbor_west = Vector2i(tile.x - 1, tile.y)
-	var neighbors = [neighbor_north,
-					 neighbor_east,
-					 neighbor_south,
-					 neighbor_west]
+	var neighbors = [neighbor_north, neighbor_east, neighbor_south, neighbor_west]
 
 	return neighbors
 
@@ -1126,7 +1122,6 @@ func _on_axe_changed(pressed: bool):
 		pickaxe_pressed = false
 		pumpjack_pressed = false
 		rocket_pressed = false
-		attack_pressed = false
 		Player.player_clicked = false
 	else: axe_pressed = false
 	clear_preview()
@@ -1138,7 +1133,7 @@ func _on_pickaxe_changed(pressed: bool):
 		pickaxe_pressed = true
 		pumpjack_pressed = false
 		rocket_pressed = false
-		attack_pressed = false
+
 		Player.player_clicked = false
 	else: pickaxe_pressed = false
 	clear_preview()
@@ -1150,7 +1145,6 @@ func _on_pumpjack_changed(pressed: bool):
 		pickaxe_pressed = false
 		pumpjack_pressed = true
 		rocket_pressed = false
-		attack_pressed = false
 		Player.player_clicked = false
 	else: pumpjack_pressed = false
 	clear_preview()
@@ -1162,24 +1156,11 @@ func _on_rocket_changed(pressed: bool):
 		pickaxe_pressed = false
 		pumpjack_pressed = false
 		rocket_pressed = true
-		attack_pressed = false
 		Player.player_clicked = false
 	else: rocket_pressed = false
 	clear_preview()
 	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
 	
-func _on_attack_changed(pressed: bool):
-	if pressed:
-		axe_pressed = false
-		pickaxe_pressed = false
-		pumpjack_pressed = false
-		rocket_pressed = false
-		attack_pressed = true
-		Player.player_clicked = false
-	else: attack_pressed = false
-	clear_preview()
-	Map.set_cell(1, player_tile, 1, Vector2i(-1, -1))
-
 func move_compass():
 	if rocket_tile != Vector2i(-1, -1):
 		var rocket_pos = Map.map_to_local(rocket_tile)

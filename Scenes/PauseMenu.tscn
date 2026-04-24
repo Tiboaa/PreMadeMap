@@ -54,6 +54,7 @@ texture = ExtResource("3_vvk4o")
 text = "Resume Game"
 
 [node name="Settings" parent="TextureRect/VBoxContainer" instance=ExtResource("2_nqfi3")]
+visible = false
 layout_mode = 2
 texture = ExtResource("3_vvk4o")
 

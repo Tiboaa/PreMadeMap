@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bik35jpd4dhxs"]
 
 [ext_resource type="Script" path="res://Scripts/test_map.gd" id="1_c3jt7"]
-[ext_resource type="Texture2D" uid="uid://b2pvx2jq5mgan" path="res://Art/Map/132x132_simple_roads_and_rivers.png" id="2_thfj2"]
+[ext_resource type="Texture2D" uid="uid://cy733fojkp4qu" path="res://Art/Map/132x132_simple_roads_and_rivers_2.png" id="2_4psfc"]
 [ext_resource type="Texture2D" uid="uid://bsfjd3une8smk" path="res://Art/Map/132x132_simple_resources.png" id="3_5x0a0"]
 [ext_resource type="PackedScene" uid="uid://dj28crav7i1eb" path="res://Scenes/BasicUI.tscn" id="4_al6vg"]
 [ext_resource type="PackedScene" uid="uid://bthuua7v322w4" path="res://Scenes/Player.tscn" id="4_pj0na"]
@@ -9,8 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://c53nt6nycwic5" path="res://Art/Rocket/220x44_rocket_tilemap.png" id="5_g6iem"]
 [ext_resource type="PackedScene" uid="uid://boytleb4dx2yj" path="res://Scenes/EndCredit.tscn" id="8_yg6qe"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_35uts"]
-texture = ExtResource("2_thfj2")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uvqq2"]
+texture = ExtResource("2_4psfc")
 texture_region_size = Vector2i(44, 44)
 0:0/0 = 0
 1:0/0 = 0
@@ -287,10 +287,10 @@ texture_region_size = Vector2i(44, 44)
 
 [sub_resource type="TileSet" id="TileSet_18wr8"]
 tile_size = Vector2i(44, 44)
-sources/0 = SubResource("TileSetAtlasSource_35uts")
 sources/1 = SubResource("TileSetAtlasSource_8wanr")
 sources/2 = SubResource("TileSetAtlasSource_mnp5e")
 sources/3 = SubResource("TileSetAtlasSource_urjth")
+sources/0 = SubResource("TileSetAtlasSource_uvqq2")
 
 [node name="Map" type="Node2D"]
 script = ExtResource("1_c3jt7")
