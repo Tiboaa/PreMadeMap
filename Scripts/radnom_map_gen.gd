@@ -5,7 +5,7 @@ extends Node2D
 var map_size: Vector2i = Vector2i(141,141)
 var map_center: int = 70
 var map_data: Array
-# Called when the node enters the scene tree for the first time.
+
 var LandNoise
 var TreeNoise
 var IronNoise
@@ -50,13 +50,6 @@ func _ready():
 	
 	build_map()
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-
-func _process(_delta):
-	pass
-	
-	
-
 func get_neighbors(tile: Vector2i):
 
 	#n, e, s, w
@@ -70,27 +63,6 @@ func get_neighbors(tile: Vector2i):
 
 	return neighbors
 
-func get_three_by_three(tile: Vector2i):
-	var neighbor_north = Vector2i(tile.x, tile.y - 1)
-	var neighbor_north_east = Vector2i(tile.x + 1, tile.y - 1)
-	var neighbor_east = Vector2i(tile.x + 1, tile.y)
-	var neighbor_south_east = Vector2i(tile.x + 1, tile.y + 1)
-	var neighbor_south = Vector2i(tile.x, tile.y + 1)
-	var neighbor_south_west = Vector2i(tile.x - 1, tile.y + 1)
-	var neighbor_west = Vector2i(tile.x - 1, tile.y)
-	var neighbor_north_west = Vector2i(tile.x - 1, tile.y - 1)
-	
-	var neighbors = [neighbor_north,
-		neighbor_north_east,
-		neighbor_east,
-		neighbor_south_east,
-		neighbor_south,
-		neighbor_south_west,
-		neighbor_west,
-		neighbor_north_west]
-
-	return neighbors
-	
 func random_generate_ocean() -> int:
 	map_data = []
 	var ocean_tiles = 0
@@ -139,9 +111,6 @@ func random_generate_rivers():
 				
 				if make_it_a_river(pos_x, pos_y):
 					break
-			#if make_it_a_river(pos_x, pos_y):
-					#break
-					
 			var second_choice: int = randi() % 2
 			for second in randi_range(4, 8):
 				if second_choice == 0: pos_y += 1
@@ -149,8 +118,6 @@ func random_generate_rivers():
 				
 				if make_it_a_river(pos_x, pos_y):
 					break
-			#if make_it_a_river(pos_x, pos_y):
-					#break
 			
 			var third_choice: int = randi() % 3
 			if third_choice == 0:
@@ -306,6 +273,7 @@ func random_generate_resources():
 		for y in map_size.y:
 			map_data[x][y].append("")
 			map_data[x][y].append(false)
+			map_data[x][y].append(100)
 	for x in map_size.x:
 		for y in map_size.y:
 			if map_data[x][y][0] == "grass" and map_data[x][y][1] == false and map_data[x][y][2] == false:
@@ -316,24 +284,18 @@ func random_generate_resources():
 				var crude_oil = OilNoise.get_noise_2d(x, y)
 				if tree < -0.45:
 					map_data[x][y][3] = "tree"
-					#print("tree")
 				if map_data[x][y][3] == "" and iron_ore < -0.45:
 					map_data[x][y][3] = "iron_ore"
-					#print("iron_ore")
 				if map_data[x][y][3] == "" and minerals < -0.5:
 					map_data[x][y][3] = "minerals"
-					#print("minerals")
 				if map_data[x][y][3] == "" and stone < -0.55:
 					map_data[x][y][3] = "stone"
-					#print("stone")
 				if map_data[x][y][3] == "" and crude_oil < -0.58:
 					map_data[x][y][3] = "crude_oil"
-					#print("crude_oil")
 				if map_data[x][y][3] != "":
 					var is_depleted = randi() % 10
 					if is_depleted == 0:
 						map_data[x][y][4] = true
-				
 
 func build_map():
 	var neighbors
@@ -357,29 +319,36 @@ func build_map():
 								road_neighbors.append(true)
 							else: road_neighbors.append(false)
 						atlas_coords = choose_road(road_neighbors)
+						map_data[x][y][5] = 1
 					else:
 						atlas_coords = Vector2i(randi() % 8, randi() % 3)
+						map_data[x][y][5] = 2
 						if map_data[x][y][3] == "tree":
+							map_data[x][y][5] = 3
 							if map_data[x][y][4]:
 								resource_atlas_coords = Vector2i(1 + (randi() % 4) * 3 ,6)
 							else:
 								resource_atlas_coords = Vector2i((randi() % 5) * 3, 0)
 						elif map_data[x][y][3] == "stone":
+							map_data[x][y][5] = 3
 							if map_data[x][y][4]:
 								resource_atlas_coords = Vector2i(randi_range(0, 4), 8)
 							else:
 								resource_atlas_coords = Vector2i(randi_range(0, 4), 7)
 						elif map_data[x][y][3] == "iron_ore":
+							map_data[x][y][5] = 3
 							if map_data[x][y][4]:
 								resource_atlas_coords = Vector2i(randi_range(0, 4), 10)
 							else:
 								resource_atlas_coords = Vector2i(randi_range(0, 4), 9)
 						elif map_data[x][y][3] == "minerals":
+							map_data[x][y][5] = 3
 							if map_data[x][y][4]:
 								resource_atlas_coords = Vector2i(randi_range(7, 11), 8)
 							else:
 								resource_atlas_coords = Vector2i(randi_range(7, 11), 7)
 						elif map_data[x][y][3] == "crude_oil":
+							map_data[x][y][5] = 3
 							if map_data[x][y][4]:
 								resource_atlas_coords = Vector2i(randi_range(7, 11), 10)
 							else:
@@ -405,9 +374,12 @@ func build_map():
 							
 						if road_neighbors[0] and road_neighbors[2] and river_neighbors[1] and river_neighbors[3]:
 							atlas_coords = Vector2i(randi_range(0,1), 12)
+							map_data[x][y][5] = 1
 						elif road_neighbors[1] and road_neighbors[3] and river_neighbors[0] and river_neighbors[2]:
 							atlas_coords = Vector2i(randi_range(4,5), 12)
+							map_data[x][y][5] = 1
 						else: map_data[x][y][2] = false
+						
 						
 					if map_data[x][y][2] == false:
 						neighbors = get_neighbors(Vector2i(x,y))
@@ -423,15 +395,20 @@ func build_map():
 								ocean_neighbors_num += 1
 							else: river_neighbors.append(false)
 						atlas_coords = choose_river(river_neighbors)
+						map_data[x][y][5] = 100
 						if atlas_coords == Vector2i(-1, -1):
 							map_data[x][y][0] = "ocean"
 							map_data[x][y][1] = false
 							atlas_coords = Vector2i(7,17)
+							map_data[x][y][5] = 100
+							
 						
 			elif map_data[x][y][0] == "ocean":
 				atlas_coords = Vector2i(7,17)
+				map_data[x][y][5] = 100
 			elif map_data[x][y][0] == "deep_ocean":
 				atlas_coords = Vector2i(6,17)
+				map_data[x][y][5] = 100
 			Map.set_cell(0, Vector2i(x,y), 0, atlas_coords)
 			Map.set_cell(2, Vector2i(x,y), 1, resource_atlas_coords)
 	
@@ -461,6 +438,7 @@ func build_map():
 			map_data[tile.x][tile.y][0] = "ocean"
 			map_data[tile.x][tile.y][1] = false
 			atlas_coords = Vector2i(7,17)
+			map_data[tile.x][tile.y][5] = 100
 			Map.set_cell(0, Vector2i(tile.x,tile.y), 0, atlas_coords)
 
 func choose_road(road_neighbors) -> Vector2i:
@@ -498,7 +476,7 @@ func choose_road(road_neighbors) -> Vector2i:
 		return Vector2i(randi_range(4, 5), 16)
 	
 	return Vector2i(randi_range(0, 1), 17) # RETURN 4
-		
+
 func choose_river(river_neighbors) -> Vector2i:
 	#1
 	if river_neighbors == [false, false, false, true]:
@@ -534,12 +512,7 @@ func choose_river(river_neighbors) -> Vector2i:
 		return Vector2i(6, 10)
 	
 	return Vector2i(-1 , -1) # RETURN 4
-		
-func orientation():
-	pass
 
-func is_in_bounds(pos: Vector2i) -> bool:
-	return pos.x >= 0 and pos.y >= 0 and pos.x < map_size.x and pos.y < map_size.y
 
 func pythagorean(a: int, b: int) -> float:
 	var c: float = sqrt(a*a + b*b)

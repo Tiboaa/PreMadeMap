@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://bxf5la33cxa70"]
+[gd_scene load_steps=41 format=3 uid="uid://bxf5la33cxa70"]
 
 [ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_8x7wp"]
 [ext_resource type="Texture2D" uid="uid://dl0d0udl7uf6v" path="res://Art/Pawns/MagmaGolem/Attack/44x44_magma_golem_attack_1.png" id="1_e013c"]
@@ -31,8 +31,11 @@
 [ext_resource type="Texture2D" uid="uid://c20wmer68yi33" path="res://Art/Pawns/MagmaGolem/HeavyAttack/44x44_magma_golem_heavy_attack_16.png" id="28_s4y4r"]
 [ext_resource type="Texture2D" uid="uid://cg1r5esdnc256" path="res://Art/Pawns/MagmaGolem/44x44_magma_golem.png" id="29_meeby"]
 [ext_resource type="Texture2D" uid="uid://c3ba7nsaq0q2r" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_1.png" id="30_lcx7b"]
+[ext_resource type="Texture2D" uid="uid://bva63x0scwccm" path="res://Art/Pawns/MagmaGolem/Hurt/44x44_magma_golem_hurt_1.png" id="30_ocyhl"]
 [ext_resource type="Texture2D" uid="uid://dijj65g4rs78s" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_2.png" id="31_cijaf"]
+[ext_resource type="Texture2D" uid="uid://d3waujfmlg33y" path="res://Art/Pawns/MagmaGolem/Hurt/44x44_magma_golem_hurt_2.png" id="31_n85nj"]
 [ext_resource type="Texture2D" uid="uid://u80gcfhc1ue3" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_3.png" id="32_6c1w7"]
+[ext_resource type="Texture2D" uid="uid://ch4v47mcimng7" path="res://Art/Pawns/MagmaGolem/Hurt/44x44_magma_golem_hurt_3.png" id="32_ivyq4"]
 [ext_resource type="Texture2D" uid="uid://81xbq0qr0wog" path="res://Art/Pawns/MagmaGolem/Walk/44x44_magma_golem_walk_4.png" id="33_ic7qw"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_csact"]
@@ -132,6 +135,20 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 0.5,
+"texture": ExtResource("30_ocyhl")
+}, {
+"duration": 2.5,
+"texture": ExtResource("31_n85nj")
+}, {
+"duration": 0.5,
+"texture": ExtResource("32_ivyq4")
+}],
+"loop": false,
+"name": &"Hurt",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("29_meeby")
 }],
@@ -169,7 +186,7 @@ script = ExtResource("1_8x7wp")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_csact")
-animation = &"HeavyAttack"
+animation = &"Hurt"
 
 [node name="HurtBox" type="Area2D" parent="."]
 

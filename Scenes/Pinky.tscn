@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ejxovug7r0tk"]
+[gd_scene load_steps=41 format=3 uid="uid://ejxovug7r0tk"]
 
 [ext_resource type="Texture2D" uid="uid://cuqvy1370ju1y" path="res://Art/Pawns/Pinky/44x44_pinky.png" id="1_bfj82"]
 [ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_sow0g"]
@@ -20,8 +20,11 @@
 [ext_resource type="Texture2D" uid="uid://bwtboh3q7ah7i" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_16.png" id="16_a30v7"]
 [ext_resource type="Texture2D" uid="uid://bclf5lp5n0v4f" path="res://Art/Pawns/Pinky/Bite/44x44_pinky_bite_17.png" id="17_6vvp2"]
 [ext_resource type="Texture2D" uid="uid://b88uagj6onfis" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_1.png" id="19_4foji"]
+[ext_resource type="Texture2D" uid="uid://b77md3wjehw4x" path="res://Art/Pawns/Pinky/Hurt/44x44_pinky_hurt1.png" id="19_aixn8"]
 [ext_resource type="Texture2D" uid="uid://ruket08oauik" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_2.png" id="20_5ext6"]
+[ext_resource type="Texture2D" uid="uid://bw2tngjqbbg5j" path="res://Art/Pawns/Pinky/Hurt/44x44_pinky_hurt2.png" id="20_a26pt"]
 [ext_resource type="Texture2D" uid="uid://tdmp1mokdgq5" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_3.png" id="21_fro6p"]
+[ext_resource type="Texture2D" uid="uid://c8k7nfi762y5s" path="res://Art/Pawns/Pinky/Hurt/44x44_pinky_hurt3.png" id="21_k387i"]
 [ext_resource type="Texture2D" uid="uid://cb3g3eplbmjo0" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_4.png" id="22_w4ler"]
 [ext_resource type="Texture2D" uid="uid://bstcjp4ddm6hj" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_5.png" id="23_0o0m7"]
 [ext_resource type="Texture2D" uid="uid://bnl2ldbudwrvc" path="res://Art/Pawns/Pinky/Slap/44x44_pinky_slap_6.png" id="24_jav7d"]
@@ -91,6 +94,20 @@ animations = [{
 }],
 "loop": false,
 "name": &"Bite",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("19_aixn8")
+}, {
+"duration": 2.5,
+"texture": ExtResource("20_a26pt")
+}, {
+"duration": 0.5,
+"texture": ExtResource("21_k387i")
+}],
+"loop": false,
+"name": &"Hurt",
 "speed": 5.0
 }, {
 "frames": [{
@@ -169,7 +186,7 @@ script = ExtResource("1_sow0g")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_3ke1x")
-animation = &"Bite"
+animation = &"Hurt"
 
 [node name="HurtBox" type="Area2D" parent="."]
 

@@ -53,13 +53,12 @@ texture = ExtResource("3_vvk4o")
 [node name="Button" parent="TextureRect/VBoxContainer/Resume" index="0"]
 text = "Resume Game"
 
-[node name="Settings" parent="TextureRect/VBoxContainer" instance=ExtResource("2_nqfi3")]
-visible = false
+[node name="NewGame" parent="TextureRect/VBoxContainer" instance=ExtResource("2_nqfi3")]
 layout_mode = 2
 texture = ExtResource("3_vvk4o")
 
-[node name="Button" parent="TextureRect/VBoxContainer/Settings" index="0"]
-text = "Settings
+[node name="Button" parent="TextureRect/VBoxContainer/NewGame" index="0"]
+text = "New Game
 "
 
 [node name="ExitToMenu" parent="TextureRect/VBoxContainer" instance=ExtResource("2_nqfi3")]
@@ -77,10 +76,11 @@ texture = ExtResource("3_vvk4o")
 text = "Exit to OS"
 
 [connection signal="pressed" from="TextureRect/VBoxContainer/Resume/Button" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="TextureRect/VBoxContainer/NewGame/Button" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="TextureRect/VBoxContainer/ExitToMenu/Button" to="." method="_on_main_menu_pressed"]
 [connection signal="pressed" from="TextureRect/VBoxContainer/ExitTiOS/Button" to="." method="_on_close_pressed"]
 
 [editable path="TextureRect/VBoxContainer/Resume"]
-[editable path="TextureRect/VBoxContainer/Settings"]
+[editable path="TextureRect/VBoxContainer/NewGame"]
 [editable path="TextureRect/VBoxContainer/ExitToMenu"]
 [editable path="TextureRect/VBoxContainer/ExitTiOS"]

@@ -353,7 +353,6 @@ layer_1/name = "Clicked"
 layer_1/tile_data = PackedInt32Array()
 
 [node name="BattleMapCrossRoads" type="TileMap" parent="."]
-visible = false
 tile_set = SubResource("TileSet_nysyl")
 format = 2
 layer_0/name = "Ground"
@@ -374,4 +373,4 @@ layer_1/tile_data = PackedInt32Array()
 position = Vector2(261.5, 156.167)
 
 [node name="Player" parent="." instance=ExtResource("4_74kk2")]
-position = Vector2(110, 110)
+position = Vector2(198, 110)

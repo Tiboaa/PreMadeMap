@@ -22,10 +22,6 @@ func _ready():
 	max_health = MainScene.max_health
 	health = MainScene.health
 	
-#func _process(_delta):
-	#max_health = MainScene.max_health
-	#health = MainScene.health
-
 
 func tile_clicked(map_tile):
 	while global_position.distance_to(map_tile) > 2:
@@ -37,5 +33,8 @@ func tile_clicked(map_tile):
 
 
 
+func _on_anim_finished():
+	if Anim.animation != "Walk" and Anim.animation != "Idle":
+		Anim.play("Idle")
 
 

@@ -1,13 +1,34 @@
-[gd_scene load_steps=14 format=3 uid="uid://bthuua7v322w4"]
+[gd_scene load_steps=35 format=3 uid="uid://bthuua7v322w4"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_38nw6"]
+[ext_resource type="Texture2D" uid="uid://cjmu7a0dewjo0" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_1.png" id="2_86ipu"]
+[ext_resource type="Texture2D" uid="uid://bqherakyt6yti" path="res://Art/Pawns/Player/Attack/44x44_player_attack_1.png" id="2_06511"]
 [ext_resource type="Texture2D" uid="uid://vqofjeuwacla" path="res://Art/Pawns/Player/44x44_simple_player_24px.png" id="2_qw3x0"]
+[ext_resource type="Texture2D" uid="uid://bknlurxpo6ej8" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_2.png" id="3_2bkk6"]
+[ext_resource type="Texture2D" uid="uid://brrvtn7mumxds" path="res://Art/Pawns/Player/Attack/44x44_player_attack_2.png" id="3_eq40h"]
 [ext_resource type="Texture2D" uid="uid://rbyjt24qhvvm" path="res://Art/Rocket/132x44_rocket_liftoff_fly_1.png" id="3_ypogv"]
+[ext_resource type="Texture2D" uid="uid://c614cut8fh878" path="res://Art/Pawns/Player/Attack/44x44_player_attack_3.png" id="4_phgb7"]
+[ext_resource type="Texture2D" uid="uid://cfp7tjlwtk4pg" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_3.png" id="4_ucwgp"]
 [ext_resource type="Texture2D" uid="uid://di787eupffhpo" path="res://Art/Rocket/132x44_rocket_liftoff_fly_2.png" id="4_xms1e"]
+[ext_resource type="Texture2D" uid="uid://be6t700dwnjbs" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_4.png" id="5_d0u0x"]
+[ext_resource type="Texture2D" uid="uid://cphjw26fbl87a" path="res://Art/Pawns/Player/Attack/44x44_player_attack_4.png" id="5_ekie4"]
 [ext_resource type="Texture2D" uid="uid://crnt3wk7tuqbv" path="res://Art/Rocket/132x44_rocket_liftoff_fly_3.png" id="5_ko6ox"]
+[ext_resource type="Texture2D" uid="uid://5ao5wupjytay" path="res://Art/Pawns/Player/Attack/44x44_player_attack_5.png" id="6_2y4cw"]
+[ext_resource type="Texture2D" uid="uid://jjuo86rtwtjs" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_5.png" id="6_r48bl"]
 [ext_resource type="Texture2D" uid="uid://0d7u2ym2gybr" path="res://Art/Rocket/132x44_rocket_liftoff_fly_4.png" id="6_xl6qi"]
+[ext_resource type="Texture2D" uid="uid://b6epco3lsqh87" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_6.png" id="7_l2ljo"]
+[ext_resource type="Texture2D" uid="uid://c3oeio731cy2v" path="res://Art/Pawns/Player/Attack/44x44_player_attack_6.png" id="7_vwsmf"]
 [ext_resource type="Texture2D" uid="uid://drmi861lb02e2" path="res://Art/Rocket/132x44_rocket_liftoff_fly_5.png" id="7_wdmnw"]
+[ext_resource type="Texture2D" uid="uid://ctup0mbwipo1s" path="res://Art/Pawns/Player/Attack/44x44_player_attack_7.png" id="8_6jowj"]
+[ext_resource type="Texture2D" uid="uid://gr1rvdqh851g" path="res://Art/Pawns/Player/Hurt/44x44_player_hurt_7.png" id="8_m4b65"]
 [ext_resource type="Texture2D" uid="uid://dv7i0mk16feas" path="res://Art/Rocket/132x44_rocket_liftoff_fly_6.png" id="8_wnwww"]
+[ext_resource type="Texture2D" uid="uid://ck1fox3cltal8" path="res://Art/Pawns/Player/Attack/44x44_player_attack_8.png" id="9_sdunc"]
+[ext_resource type="Texture2D" uid="uid://c8pos3frjosqi" path="res://Art/Pawns/Player/Attack/44x44_player_attack_9.png" id="10_kgscf"]
+[ext_resource type="Texture2D" uid="uid://c8b7gf80ss45a" path="res://Art/Pawns/Player/Attack/44x44_player_attack_10.png" id="11_f5td2"]
+[ext_resource type="Texture2D" uid="uid://ck33fa1c7f3xx" path="res://Art/Pawns/Player/Walk/44x44_player_walk_1.png" id="26_1j0pw"]
+[ext_resource type="Texture2D" uid="uid://b0gfaavsf04ev" path="res://Art/Pawns/Player/Walk/44x44_player_walk_2.png" id="27_g71n4"]
+[ext_resource type="Texture2D" uid="uid://ckam8l07e5obb" path="res://Art/Pawns/Player/Walk/44x44_player_walk_3.png" id="28_0sw74"]
+[ext_resource type="Texture2D" uid="uid://dwbpcguxw5t3e" path="res://Art/Pawns/Player/Walk/44x44_player_walk_4.png" id="29_g7hgq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2schs"]
 size = Vector2(44, 44)
@@ -23,6 +44,67 @@ size = Vector2(220, 132)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_h7m1w"]
 animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("2_06511")
+}, {
+"duration": 2.0,
+"texture": ExtResource("3_eq40h")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_phgb7")
+}, {
+"duration": 0.2,
+"texture": ExtResource("5_ekie4")
+}, {
+"duration": 0.05,
+"texture": ExtResource("6_2y4cw")
+}, {
+"duration": 0.1,
+"texture": ExtResource("7_vwsmf")
+}, {
+"duration": 2.0,
+"texture": ExtResource("8_6jowj")
+}, {
+"duration": 0.01,
+"texture": ExtResource("9_sdunc")
+}, {
+"duration": 2.0,
+"texture": ExtResource("10_kgscf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_f5td2")
+}],
+"loop": false,
+"name": &"Attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("2_86ipu")
+}, {
+"duration": 0.5,
+"texture": ExtResource("3_2bkk6")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_ucwgp")
+}, {
+"duration": 0.4,
+"texture": ExtResource("5_d0u0x")
+}, {
+"duration": 0.4,
+"texture": ExtResource("6_r48bl")
+}, {
+"duration": 0.4,
+"texture": ExtResource("7_l2ljo")
+}, {
+"duration": 0.5,
+"texture": ExtResource("8_m4b65")
+}],
+"loop": false,
+"name": &"Hurt",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_qw3x0")
@@ -53,6 +135,23 @@ animations = [{
 "loop": true,
 "name": &"Rocket",
 "speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_1j0pw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_g71n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_0sw74")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_g7hgq")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 8.0
 }]
 
 [node name="Player" type="Node2D" groups=["character"]]
@@ -81,6 +180,8 @@ shape = SubResource("RectangleShape2D_2qber")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_h7m1w")
-animation = &"Idle"
+animation = &"Walk"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_anim_finished"]

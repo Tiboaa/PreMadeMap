@@ -9,6 +9,9 @@ var current_mode: String = "map"
 var health: int
 var enemy_type: String
 
+@onready var Parent = get_parent()
+@onready var MainScene = get_tree().current_scene
+
 var max_hit_points: int
 var hit_points: int
 var hurt_points: int
@@ -44,7 +47,6 @@ func set_mode(mode: String):
 	current_mode = mode
 
 	if mode == "map":
-		#add a detector here that triggers if moving is changed and is now false is that possible?
 		Anim.play("Idle")
 
 	elif mode == "battle":
@@ -61,15 +63,9 @@ func map_update(_delta):
 	enemy_visible = false
 
 func check_player() -> Vector2i:
-	#player has a PlayerHurtBox as collision shape 2d uniqe name
-	#and is the Child of this BugEater node's parent
-	#check if it is in collision with BugEater's SearchBox which is also an area 2d
-		
-
 	for area in SearchBox.get_overlapping_areas():
 		if area.name == "PlayerHurtBox":
 			var player = area.get_parent()
-			#print("Player detected:", player.global_position)
 			return player.global_position
 
 	return Vector2i(-1, -1)
@@ -79,14 +75,30 @@ func pythagorean(a: int, b: int) -> float:
 	return c
 
 func move_to_tile(tile: Vector2i, map: TileMap):
-	var current_tile = map.local_to_map(global_position)
+	if hit_points <= 0:
+		return
+	if tile == Vector2i(-1, -1):
+		return
+	var current_tile
+	if Parent != MainScene:
+		current_tile = map.local_to_map(map.to_local(global_position))
+	else:
+		current_tile = map.local_to_map(global_position)
+
 	var tile_distance: float = pythagorean(abs(current_tile.x-tile.x), abs(current_tile.y-tile.y))
+		
+	if current_tile.x > tile.x:
+		Anim.flip_h = true
+	else: Anim.flip_h = false
 	
-			
 	var target_pos = map.map_to_local(tile)
+	if Parent != MainScene:
+		target_pos = map.to_global(map.map_to_local(tile))
+	else: target_pos = map.map_to_local(tile)
 	Anim.play("Walk")
 	var tween = create_tween()
-	tween.tween_property(self, "global_position", target_pos, 0.2*tile_distance)
+	var duration = max(0.05, 0.2 * tile_distance)
+	tween.tween_property(self, "global_position", target_pos, duration)
 
 
 	await tween.finished
@@ -97,11 +109,8 @@ func move_to_tile(tile: Vector2i, map: TileMap):
 # -------------------------
 
 func battle_update() -> bool:
-	print("battle update called")
 	if hit_points <= 0:
-		print(hit_points)
 		return true
-		#remove_from_group("fighting")
 	return false
 
 

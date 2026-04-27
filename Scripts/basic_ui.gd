@@ -114,7 +114,6 @@ func _on_axe_toggled(toggled_on):
 	else:
 		AxeBtn.texture = axe
 	emit_signal("axe_changed", toggled_on)
-	print("axe changed to ", toggled_on)
 
 func _on_pickaxe_toggled(toggled_on):
 	if toggled_on:
@@ -186,7 +185,6 @@ func _on_heavy_atk_toggled(toggled_on):
 
 func _on_damage_taken(value):
 	if value <= 0:
-		print("should go there")
 		var dead = true
 		MainScene.get_node("BattleMap").all_enemies_killed(dead)
 		

@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cbivfhi25kvcw"]
+[gd_scene load_steps=34 format=3 uid="uid://cbivfhi25kvcw"]
 
 [ext_resource type="Texture2D" uid="uid://dqcjwvxnyotge" path="res://Art/Pawns/BugEater/Bite/44x44_bug_eater_bite_1.png" id="1_7hfon"]
 [ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_n03ll"]
@@ -13,7 +13,10 @@
 [ext_resource type="Texture2D" uid="uid://ddn6t7lrb465o" path="res://Art/Pawns/BugEater/44x44_bug_eater.png" id="10_fsen3"]
 [ext_resource type="Texture2D" uid="uid://524avevmtpsa" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_1.png" id="10_uc6yp"]
 [ext_resource type="Texture2D" uid="uid://ddxxdpl3xinkh" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_2.png" id="11_n1efq"]
+[ext_resource type="Texture2D" uid="uid://bbxx5842vl6m1" path="res://Art/Pawns/BugEater/Hurt/44x44_bug_eater_hurt_1.png" id="11_sj70p"]
 [ext_resource type="Texture2D" uid="uid://bnvh3ym5fhna6" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_3.png" id="12_pv1lg"]
+[ext_resource type="Texture2D" uid="uid://cec8vdohpxo1b" path="res://Art/Pawns/BugEater/Hurt/44x44_bug_eater_hurt_2.png" id="12_wey6l"]
+[ext_resource type="Texture2D" uid="uid://f8esjkh1hexe" path="res://Art/Pawns/BugEater/Hurt/44x44_bug_eater_hurt_3.png" id="13_rewnm"]
 [ext_resource type="Texture2D" uid="uid://bo3t4syihr4ek" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_4.png" id="13_wt7o6"]
 [ext_resource type="Texture2D" uid="uid://5dynrpme07r8" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_5.png" id="14_jp5a5"]
 [ext_resource type="Texture2D" uid="uid://l17pj3f7jojx" path="res://Art/Pawns/BugEater/Slam/44x44_bug_eater_slam_6.png" id="15_impo1"]
@@ -61,6 +64,20 @@ animations = [{
 "loop": false,
 "name": &"Bite",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 0.1,
+"texture": ExtResource("11_sj70p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_wey6l")
+}, {
+"duration": 0.1,
+"texture": ExtResource("13_rewnm")
+}],
+"loop": false,
+"name": &"Hurt",
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -141,7 +158,9 @@ script = ExtResource("1_n03ll")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_mpvf7")
-animation = &"Walk"
+animation = &"Hurt"
+frame = 2
+frame_progress = 1.0
 
 [node name="HurtBox" type="Area2D" parent="."]
 

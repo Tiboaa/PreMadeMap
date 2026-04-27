@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cq47y6nu4mbj3"]
+[gd_scene load_steps=37 format=3 uid="uid://cq47y6nu4mbj3"]
 
 [ext_resource type="Script" path="res://Scripts/enemy.gd" id="1_86lr4"]
 [ext_resource type="Texture2D" uid="uid://bd4targ3gxjpn" path="res://Art/Pawns/GreenHoplite/ApAttack/44x44_green_hoplite_ap_attack_1.png" id="1_i66v0"]
@@ -28,8 +28,11 @@
 [ext_resource type="Texture2D" uid="uid://dabo5qfu8wwys" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_1.png" id="25_bat76"]
 [ext_resource type="Texture2D" uid="uid://ch6m8tbm3lja5" path="res://Art/Pawns/GreenHoplite/44x44_green_hoplite.png" id="25_ql846"]
 [ext_resource type="Texture2D" uid="uid://fqsehqfu6xqh" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_2.png" id="26_iuw68"]
+[ext_resource type="Texture2D" uid="uid://csd057okk6jn4" path="res://Art/Pawns/GreenHoplite/Hurt/44x44_green_hoplite_hurt_1.png" id="26_k67mp"]
 [ext_resource type="Texture2D" uid="uid://qseexicu3d58" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_3.png" id="27_pkww6"]
+[ext_resource type="Texture2D" uid="uid://b8jrvdhfp5y6" path="res://Art/Pawns/GreenHoplite/Hurt/44x44_green_hoplite_hurt_2.png" id="27_q2prl"]
 [ext_resource type="Texture2D" uid="uid://j6s520axvnc1" path="res://Art/Pawns/GreenHoplite/Walk/44x44_green_hoplite_walk_4.png" id="28_2h2ek"]
+[ext_resource type="Texture2D" uid="uid://bsl722bq2m0lv" path="res://Art/Pawns/GreenHoplite/Hurt/44x44_green_hoplite_hurt_3.png" id="28_x4vk5"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tgyq0"]
 animations = [{
@@ -116,6 +119,20 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 0.5,
+"texture": ExtResource("26_k67mp")
+}, {
+"duration": 2.5,
+"texture": ExtResource("27_q2prl")
+}, {
+"duration": 0.5,
+"texture": ExtResource("28_x4vk5")
+}],
+"loop": false,
+"name": &"Hurt",
+"speed": 5.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("25_ql846")
 }],
@@ -153,7 +170,7 @@ script = ExtResource("1_86lr4")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_tgyq0")
-animation = &"Attack"
+animation = &"ApAttack"
 
 [node name="HurtBox" type="Area2D" parent="."]
 

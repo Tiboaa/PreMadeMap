@@ -8,7 +8,7 @@ func _on_new_game_pressed():
 
 
 func _on_settings_pressed():
-	pass # Replace with function body.
+	pass
 
 
 func _on_exit_pressed():

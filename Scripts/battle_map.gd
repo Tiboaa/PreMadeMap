@@ -4,7 +4,6 @@ var CurrentMap
 
 @onready var SimpleMap = $BattleMapSimple
 @onready var RoadMap = $BattleMapRoad
-#@onready var RiverMap = $BattleMapRiver
 @onready var CrossRoadsMap = $BattleMapCrossRoads
 @onready var RiverCrossingMap = $BattleMapRiverCrossing
 @onready var UI = get_parent().get_node("BasicUI")
@@ -45,10 +44,14 @@ var max_preview_distance: Vector2i = Vector2i(-1, -1)
 
 var move_there_tile: Vector2i = Vector2i(-1, -1)
 
+var player_attacking: bool = false
 
+func _process(delta):
+	if enemy_number <= 0:
+		all_enemies_killed(false)
 
 func _ready():
-	CurrentMap = RiverCrossingMap
+	CurrentMap = CrossRoadsMap
 	CurrentMap.visible = true
 	map_size = CurrentMap.get_used_rect().size
 	map_size_for_spawning = Vector2i(map_size.x-3, map_size.y-3)
@@ -57,37 +60,39 @@ func _ready():
 	UI.area_atk_changed.connect(_on_area_changed)
 	UI.heavy_atk_changed.connect(_on_heavy_changed)
 	health_update()
-	player_tile = Vector2i(2, 2)#CurrentMap.to_local(Vector2i(randi_range(0,5), randi_range(0,5)))
-	#Player.global_position = player_tile#CurrentMap.to_global(player_tile)
+	player_tile = Vector2i(4, 2)
+	UI.Survived.visible = false
+	UI.Death.visible = false
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 	
 func _input(event):
+	if event.is_action_pressed("end_turn"):
+		enemies_moving = false
+		player_attacking = false
+		player_moving = false
+		basic_atk_selected = false
+		area_atk_selected = false
+		heavy_atk_selected = false
 	if event.is_action_pressed("ui_cancel"):
 		MainScene.PauseMenu.visible = true
 		get_tree().paused = true
 	var mouse_pos = CurrentMap.to_local(get_global_mouse_position())
 	var current_map_tile: Vector2i = CurrentMap.local_to_map(mouse_pos)
-	if  not enemies_moving and not is_tile_off_map(current_map_tile):
+	
+	if  not enemies_moving and not player_attacking and not is_tile_off_map(current_map_tile):
 		if event is InputEventMouseMotion and not player_moving:
 			if Player.player_clicked:
-				#if current_map_tile != prev_map_tile:
 				var route = get_preview_path(CurrentMap.local_to_map(CurrentMap.to_local(Player.global_position)), current_map_tile)
 				if route.size() > 0:
 					draw_preview(route)
-				#elif current_map_tile != CurrentMap.local_to_map(Player.position):
-					#CurrentMap.set_cell(1, current_map_tile, 2, Vector2i(6, 6))
 				if prev_map_tile != current_map_tile and prev_map_tile != CurrentMap.local_to_map(Player.position):
 					CurrentMap.set_cell(1, prev_map_tile, -1)
 					
 			elif basic_atk_selected:
-				if not Player.player_clicked: # MIGH BE REDUNDANT
+				if not Player.player_clicked:
 					CurrentMap.set_cell(1, prev_map_tile, -1)
 					CurrentMap.set_cell(1, current_map_tile, 2, Vector2i(6, 6))
-					
+				
 			elif area_atk_selected:
 				if not Player.player_clicked:
 					var area = get_neighbors(current_map_tile)
@@ -105,20 +110,18 @@ func _input(event):
 					CurrentMap.set_cell(1, Vector2i(prev_map_tile.x, player_tile.y), -1)
 					CurrentMap.set_cell(1, Vector2i(current_map_tile.x, player_tile.y), 2, Vector2i(6, 6))
 			else:
-				CurrentMap.set_cell(1, prev_map_tile, -1) # THATS BETTER
+				CurrentMap.set_cell(1, prev_map_tile, -1)
 				CurrentMap.set_cell(1, current_map_tile, 2, Vector2i(6, 6))
-				
-
-
 
 			prev_map_tile = current_map_tile
-		if area_atk_selected or basic_atk_selected or heavy_atk_selected:
+		if (area_atk_selected or basic_atk_selected or heavy_atk_selected) and not player_moving:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				var click_pos: Vector2 = CurrentMap.to_local(get_global_mouse_position())
 				var map_tile_clicked: Vector2i = CurrentMap.local_to_map(click_pos)
 				if basic_atk_selected:
+					player_attacking = true
+					
 					if CurrentMap.local_to_map(Player.position) == map_tile_clicked:
-						#print("player clicked 8")
 						Player.player_clicked = true
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 					else:
@@ -126,20 +129,35 @@ func _input(event):
 						await get_tree().create_timer(0.5).timeout
 						CurrentMap.set_cell(1, map_tile_clicked, -1)
 						
+						if map_tile_clicked.x > player_tile.x:
+							Player.Anim.flip_h = false
+						else: Player.Anim.flip_h = true
+							
 						var clicked_enemy = get_enemy_on_tile(map_tile_clicked)
 						if clicked_enemy != null:
-							hurt_the_enemy(clicked_enemy, 2)
+							Player.Anim.play("Attack")
+							await Player.Anim.animation_finished
+							clicked_enemy.Anim.play("Hurt")
+							await clicked_enemy.Anim.animation_finished
+							await hurt_the_enemy(clicked_enemy, 2)
 						else:
+							player_attacking = false
 							return
 						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
-						
-					basic_atk_selected = false
-					UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
-					
+						basic_atk_selected = false
+						area_atk_selected = false
+						heavy_atk_selected = false
+
+						UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
+
+					player_attacking = false
 				if area_atk_selected:
+					player_attacking = true
 					if CurrentMap.local_to_map(Player.position) == map_tile_clicked:
 						Player.player_clicked = true
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
@@ -152,25 +170,39 @@ func _input(event):
 						for i in area:
 							CurrentMap.set_cell(1, i, -1)
 							
+						if map_tile_clicked.x > player_tile.x:
+							Player.Anim.flip_h = false
+						else: Player.Anim.flip_h = true
+							
 						var enemies_hurt: int = 0
 						for i in area:
 							var clicked_enemy = get_enemy_on_tile(i)
 							if clicked_enemy != null:
-								hurt_the_enemy(clicked_enemy, 1)
+								clicked_enemy.Anim.play("Hurt")
+								await hurt_the_enemy(clicked_enemy, 1)
 								enemies_hurt += 1
+						if enemies_hurt > 0:
+							Player.Anim.play("Attack")
+							await Player.Anim.animation_finished
 						if enemies_hurt == 0:
+							player_attacking = false
 							return
 						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
-						
-					area_atk_selected = false
-					UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
-				
+						basic_atk_selected = false
+						area_atk_selected = false
+						heavy_atk_selected = false 
+
+						UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
+
+					player_attacking = false
 				if heavy_atk_selected:
+					player_attacking = true
 					if CurrentMap.local_to_map(Player.position) == map_tile_clicked:
-						#print("player clicked 13")
 						Player.player_clicked = true
 						CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
 					else :
@@ -179,26 +211,38 @@ func _input(event):
 						await get_tree().create_timer(0.5).timeout
 						CurrentMap.set_cell(1, attacked_tile, -1)
 						
+						if attacked_tile.x > player_tile.x:
+							Player.Anim.flip_h = false
+						else: Player.Anim.flip_h = true
+						
 						var clicked_enemy = get_enemy_on_tile(attacked_tile)
 						if clicked_enemy != null:
-							hurt_the_enemy(clicked_enemy, 4)
+							Player.Anim.play("Attack")
+							await Player.Anim.animation_finished
+							clicked_enemy.Anim.play("Hurt")
+							await clicked_enemy.Anim.animation_finished
+							await hurt_the_enemy(clicked_enemy, 4)
 						else: 
+							player_attacking = false
 							return
 						
 						enemies_moving = true
 						await move_the_enemies()
 						enemies_moving = false
-						
-					area_atk_selected = false
-					UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
-						
+						basic_atk_selected = false
+						area_atk_selected = false
+						heavy_atk_selected = false
+
+						UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
+						UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
+
+					player_attacking = false
 				return
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not player_moving:
 
 			var click_pos: Vector2 = CurrentMap.to_local(get_global_mouse_position())
 			var map_tile_clicked: Vector2i = CurrentMap.local_to_map(click_pos)
-			
-			#FEELS POINTLESS BUT JUST IN CASE
 			if is_tile_off_map(map_tile_clicked) and Player.player_clicked:
 			
 				CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
@@ -214,17 +258,9 @@ func _input(event):
 					Player.player_clicked = false
 					CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(-1, -1))
 
-			# move player
 			elif Player.player_clicked:
 				player_moving = true
-				#CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(5, 6))
-				#CurrentMap.set_cell(1, CurrentMap.local_to_map(Player.position), 1, Vector2i(-1,-1))
-
-				#await get_tree().create_timer(0.5).timeout
-				#CurrentMap.set_cell(1, map_tile_clicked, 2, Vector2i(-1, -1))
-
 				Player.player_clicked = false
-				#print(map_tile_clicked)
 				
 				await move_there(CurrentMap.local_to_map(Player.position), move_there_tile)
 				player_tile = CurrentMap.local_to_map(Player.position)
@@ -235,27 +271,32 @@ func _input(event):
 					enemies_moving = true
 					await move_the_enemies()
 					enemies_moving = false
+					basic_atk_selected = false
+					area_atk_selected = false
+					heavy_atk_selected = false
+
+					UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
+					UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
+					UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
+
 				player_moving = false
 				prev_player_tile = player_tile
-	enemies_moving = false
-	player_moving = false
-	if enemy_number <= 0:
-		all_enemies_killed(false)
+
 
 func get_preview_path(start_tile: Vector2i, destination: Vector2i) -> Array:
 	var open_set = [start_tile]
 	var came_from = {}
 
-	var g_score = {}
-	var f_score = {}
+	var g_distance = {}
+	var f_distance = {}
 
-	g_score[start_tile] = 0
-	f_score[start_tile] = heuristic(start_tile, destination)
+	g_distance[start_tile] = 0
+	f_distance[start_tile] = heuristic(start_tile, destination)
 
 	while open_set.size() > 0:
 		var current = open_set[0]
 		for tile in open_set:
-			if f_score.get(tile, INF) < f_score.get(current, INF):
+			if f_distance.get(tile, INF) < f_distance.get(current, INF):
 				current = tile
 
 		if current == destination:
@@ -269,15 +310,13 @@ func get_preview_path(start_tile: Vector2i, destination: Vector2i) -> Array:
 
 			if map_data[neighbor.x][neighbor.y][5] == 1000:
 				continue
-			#if map_data[neighbor.x][neighbor.y][5] == 100:
-				#continue
 
-			var tentative_g = g_score.get(current, INF) + map_data[neighbor.x][neighbor.y][5]
+			var g_cost = g_distance.get(current, INF) + map_data[neighbor.x][neighbor.y][5]
 
-			if tentative_g < g_score.get(neighbor, INF):
+			if g_cost < g_distance.get(neighbor, INF):
 				came_from[neighbor] = current
-				g_score[neighbor] = tentative_g
-				f_score[neighbor] = tentative_g + heuristic(neighbor, destination)
+				g_distance[neighbor] = g_cost
+				f_distance[neighbor] = g_cost + heuristic(neighbor, destination)
 
 				if neighbor not in open_set:
 					open_set.append(neighbor)
@@ -294,7 +333,6 @@ func map_gen():
 			map_data[x].append([])
 			var ground = CurrentMap.get_cell_atlas_coords(0, Vector2i(x,y), false)
 			var border = CurrentMap.get_cell_source_id(0, Vector2i(x,y), false)
-			#var resources = CurrentMap.get_cell_atlas_coords(2, Vector2i(x,y), false)
 			var ground_type: String
 			var river: bool
 			var road: bool
@@ -319,32 +357,6 @@ func map_gen():
 					road = true
 				else: road = false
 				resource_depleted = false
-				#if resources.y >= 0 and resources.y <= 6:
-					#resource_type = "tree"
-					#if resources.y == 6: resource_depleted = true
-				#if resources.x >= 0 and resources.x <= 4:
-					#if resources.y == 7:
-						#resource_type = "stone"
-					#elif resources.y == 8:
-						#resource_type = "stone"
-						#resource_depleted = true
-					#elif resources.y == 9:
-						#resource_type = "iron_ore"
-					#elif resources.y == 10:
-						#resource_type = "iron_ore"
-						#resource_depleted = true
-				#elif resources.x >= 7 and resources.x <= 11:
-					#if resources.y == 7:
-						#resource_type = "minerals"
-					#elif resources.y == 8:
-						#resource_type = "minerals"
-						#resource_depleted = true
-					#elif resources.y == 9:
-						#resource_type = "crude_oil"
-					#elif resources.y == 10:
-						#resource_type = "crude_oil"
-						#resource_depleted = true
-				#
 
 
 			if ground_type == "border":
@@ -356,7 +368,6 @@ func map_gen():
 			elif road == false and resource_type == "":
 				cost += 1 
 					
-
 			map_data[x][y] = [ground_type, river, road, resource_type, resource_depleted, cost]
 
 func is_tile_off_map(tile: Vector2i) -> bool:
@@ -367,39 +378,37 @@ func is_tile_off_map(tile: Vector2i) -> bool:
 		return true
 	
 	return false
+
 # -------------------------
 # PLAYER MOVEMENT
 # -------------------------
 func move_there(start_tile: Vector2i, destination: Vector2i):
 	if is_tile_occupied(destination, "enemy"):
 		return
+		
 	var is_water = map_data[destination.x][destination.y][5] == 100
-
 	if is_water:
 		return
 		
 	var open_set = [start_tile]
 	var came_from = {}
-
-	var g_score = {}
-	var f_score = {}
-
-	g_score[start_tile] = 0
-	f_score[start_tile] = heuristic(start_tile, destination)
-
+	var g_distance = {}
+	var f_distance = {}
+	g_distance[start_tile] = 0
+	f_distance[start_tile] = heuristic(start_tile, destination)
+	
 	while open_set.size() > 0:
 		var current = open_set[0]
 		for tile in open_set:
-			if f_score.get(tile, INF) < f_score.get(current, INF):
+			if f_distance.get(tile, INF) < f_distance.get(current, INF):
 				current = tile
 
 		if current == destination:
 			var route = reconstruct_path(came_from, current)
 			for i in range(1, route.size()):
 				var tile = route[i]
-				if true:#Player.battle_movement_points >= map_data[tile.x][tile.y][5]:
+				if true:
 					await Player.tile_clicked(CurrentMap.to_global(CurrentMap.map_to_local(tile)))
-					#total_cost += map_data[tile.x][tile.y][5]
 				else:
 					Player.battle_movement_points = Player.max_battle_movement_points
 					return
@@ -408,35 +417,35 @@ func move_there(start_tile: Vector2i, destination: Vector2i):
 			return
 
 		open_set.erase(current)
-
 		for neighbor in get_neighbors(current):
 			if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= map_size.x or neighbor.y >= map_size.y:
 				continue
-
+			
 			if map_data[neighbor.x][neighbor.y][5] == 1000 :
 				continue
-
-			var tentative_g = g_score.get(current, INF) + map_data[neighbor.x][neighbor.y][5]
-
-			if tentative_g < g_score.get(neighbor, INF):
+			
+			var g_cost = g_distance.get(current, INF) + map_data[neighbor.x][neighbor.y][5]
+			if g_cost < g_distance.get(neighbor, INF):
 				came_from[neighbor] = current
-				g_score[neighbor] = tentative_g
-				f_score[neighbor] = tentative_g + heuristic(neighbor, destination)
+				g_distance[neighbor] = g_cost
+				f_distance[neighbor] = g_cost + heuristic(neighbor, destination)
 
 				if neighbor not in open_set:
 					open_set.append(neighbor)
 
 func reconstruct_path(came_from: Dictionary, current: Vector2i) -> Array:
-	var total_path = [current]
-
+	var chosen_path = [current]
+	
 	while current in came_from:
 		current = came_from[current]
-		total_path.insert(0, current)
+		chosen_path.insert(0, current)
+	
+	return chosen_path
+	
+	
 
-	return total_path
-
-func heuristic(a: Vector2i, b: Vector2i) -> int:
-	return abs(a.x - b.x) + abs(a.y - b.y)
+func heuristic(start_tile: Vector2i, destination: Vector2i) -> int:
+	return abs(start_tile.x - destination.x) + abs(start_tile.y - destination.y)
 
 func get_neighbors(tile: Vector2i):
 	var neighbor_north = Vector2i(tile.x, tile.y - 1)
@@ -478,15 +487,6 @@ func draw_preview(route: Array):
 	max_preview_distance = allowed_route[allowed_route.size()-1]
 	move_there_tile = max_preview_distance
 	CurrentMap.set_cell(1, max_preview_distance, 2, Vector2i(5, 6))
-	
-	#for i in range(allowed_route.size(), route.size() - 1):
-		#var prev = route[i - 1]
-		#var current = route[i]
-		#var next = route[i + 1]
-#
-		#var coord: Vector2i = get_direction_tile(prev, current, next)
-		#coord = Vector2i(coord.x + 2, coord.y)
-		#CurrentMap.set_cell(1, current, 3, coord)
 
 	preview_route = route
 
@@ -562,11 +562,6 @@ func is_tile_occupied(tile: Vector2i, by_who: String) -> bool:
 			return true
 	return false
 
-func enemy_moving(enemy, target_tile):
-	if enemy.enemy_visible:
-		await enemy.move_to_tile(target_tile, CurrentMap)
-	else: enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(target_tile))
-	
 func get_random_tile(center: Vector2i, type: String) -> Vector2i:
 	var attempts = 0
 	if type == "bug_eater":
@@ -674,7 +669,7 @@ func spawn_fighters():
 		var bug = BugEaterScene.instantiate()
 		var tile = get_random_enemy_tile()
 		if tile != Vector2i(-1, -1):
-			var pos = CurrentMap.map_to_local(tile)#CurrentMap.to_global(CurrentMap.map_to_local(tile))
+			var pos = CurrentMap.map_to_local(tile)
 
 			bug.global_position = pos
 			add_child(bug)
@@ -685,7 +680,7 @@ func spawn_fighters():
 		var hoplite = GreenHopliteScene.instantiate()
 		var tile = get_random_enemy_tile()
 		if tile != Vector2i(-1, -1):
-			var pos = CurrentMap.map_to_local(tile)#CurrentMap.to_global(CurrentMap.map_to_local(tile))
+			var pos = CurrentMap.map_to_local(tile)
 
 			hoplite.global_position = pos
 			add_child(hoplite)
@@ -697,7 +692,7 @@ func spawn_fighters():
 		var golem = MagmaGolemScene.instantiate()
 		var tile = get_random_enemy_tile()
 		if tile != Vector2i(-1, -1):
-			var pos = CurrentMap.map_to_local(tile)#CurrentMap.to_global(CurrentMap.map_to_local(tile))
+			var pos = CurrentMap.map_to_local(tile)
 
 			golem.global_position = pos
 			add_child(golem)
@@ -708,7 +703,7 @@ func spawn_fighters():
 		var pinky = PinkyScene.instantiate()
 		var tile = get_random_enemy_tile()
 		if tile != Vector2i(-1, -1):
-			var pos = CurrentMap.map_to_local(tile)#CurrentMap.to_global(CurrentMap.map_to_local(tile))
+			var pos = CurrentMap.map_to_local(tile)
 
 			pinky.global_position = pos
 			add_child(pinky)
@@ -723,58 +718,70 @@ func move_the_enemies():
 			var where_is_player = enemy.check_player()
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
 			if where_is_player == Vector2i(-1, -1):
-				enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "bug_eater")))
-				
+				var target_tile = get_random_tile(enemy_tile, "bug_eater")
+				await enemy.move_to_tile((target_tile), CurrentMap)
 			else:
 				var next_to_player = get_neighbors(player_tile)
 				if enemy_tile in next_to_player:
+					if enemy_tile.x > where_is_player.x:
+						enemy.Anim.flip_h = true
+					else: enemy.Anim.flip_h = false
 					var option = randi() % 2
 					if option == 0:
 						enemy.Anim.play("Bite")
+						Player.Anim.play("Hurt")
 						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 					if option == 1:
 						enemy.Anim.play("Slam")
+						Player.Anim.play("Hurt")
 						Player.health -= enemy.hurt_points * 2 + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 
 				else:
 					for i in next_to_player:
 						if not is_tile_occupied(i, "character") and not is_tile_off_map(i):
-							enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(i))
+							var target_tile = i
+							await enemy.move_to_tile((target_tile), CurrentMap)
+							break
 		
 		if enemy.is_in_group("green_hoplite"):
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
 			if player_tile.y != enemy_tile.y:
 				var tile_option: Vector2i
 				var found_the_tile: bool = false
-				for i in enemy_tile.x:
+				for i in range(enemy_tile.x):
 					tile_option = Vector2i(enemy_tile.x, player_tile.y + i)
-					#print("really should move ", i)
 					if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
-						enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
-						#print("moved")
+						var target_tile = tile_option
+						await enemy.move_to_tile((target_tile), CurrentMap)
 						found_the_tile = true
 						break
 					tile_option = Vector2i(enemy_tile.x, player_tile.y - i)
 					if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
-						enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
-						#print("moved")
+						var target_tile = tile_option
+						if enemy_tile.x > target_tile.x:
+							enemy.Anim.flip_h = true
+						else: enemy.Anim.flip_h = false
+						await enemy.move_to_tile((target_tile), CurrentMap)
 						found_the_tile = true
 						break
 				if not found_the_tile:
-					enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "green_hoplite")))
+					var target_tile = get_random_tile(enemy_tile, "green_hoplite")
+					await enemy.move_to_tile((target_tile), CurrentMap)
 			else:
-				#print("should attack")
+				if enemy_tile.x > player_tile.x:
+					enemy.Anim.flip_h = true
+				else: enemy.Anim.flip_h = false
 				var option = randi() % 3
 				if option == 0:
-					#print("attack")
 					enemy.Anim.play("Attack")
+					Player.Anim.play("Hurt")
 					Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 					await enemy.Anim.animation_finished
 				else:
-					#print("ap attack")
 					enemy.Anim.play("ApAttack")
+					Player.Anim.play("Hurt")
 					Player.health -= enemy.hurt_points * 3 + (randi() % 21 - 10)
 					await enemy.Anim.animation_finished
 		
@@ -782,30 +789,44 @@ func move_the_enemies():
 			var where_is_player = enemy.check_player()
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
 			if where_is_player == Vector2i(-1, -1):
-				enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "magma_golem")))
+				var target_tile = get_random_tile(enemy_tile, "magma_golem")
+				await enemy.move_to_tile((target_tile), CurrentMap)
 			else:
 				var option = randi() % 2
 				if option == 0:
+					if enemy_tile.x > player_tile.x:
+							enemy.Anim.flip_h = true
+					else: enemy.Anim.flip_h = false
 					if player_tile.y != enemy_tile.y:
 						var tile_option: Vector2i
 						var found_the_tile: bool = false
-						for i in enemy_tile.x:
+						for i in range(enemy_tile.x):
 							tile_option = Vector2i(enemy_tile.x, player_tile.y + i)
 							if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
-								enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
+								var target_tile = tile_option
+								await enemy.move_to_tile((target_tile), CurrentMap)
 								found_the_tile = true
 								break
 							tile_option = Vector2i(enemy_tile.x, player_tile.y - i)
 							if not is_tile_occupied(tile_option, "character") and not is_tile_off_map(tile_option):
-								enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(tile_option))
+								var target_tile = tile_option
+								await enemy.move_to_tile((target_tile), CurrentMap)
 								found_the_tile = true
 								break
+						if not found_the_tile:
+							var target_tile = get_random_tile(enemy_tile, "magma_golem")
+							await enemy.move_to_tile((target_tile), CurrentMap)
 					else:
 						enemy.Anim.play("Attack")
+						Player.Anim.play("Hurt")
 						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 				if option == 1:
+					if enemy_tile.x > player_tile.x:
+						enemy.Anim.flip_h = true
+					else: enemy.Anim.flip_h = false
 					enemy.Anim.play("HeavyAttack")
+					Player.Anim.play("Hurt")
 					Player.health -= enemy.hurt_points * 2 + (randi() % 5 - 2)
 					await enemy.Anim.animation_finished
 			
@@ -813,48 +834,69 @@ func move_the_enemies():
 			var where_is_player = enemy.check_player()
 			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
 			if where_is_player == Vector2i(-1, -1):
-				print("pinky should move to random tile")
-				enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(get_random_tile(enemy_tile, "pinky")))
+				var target_tile = get_random_tile(enemy_tile, "pinky")
+				await enemy.move_to_tile((target_tile), CurrentMap)
 				
 			else:
 				var next_to_player = get_neighbors(player_tile)
+				
 				if enemy_tile in next_to_player:
+					if enemy_tile.x > player_tile.x:
+						enemy.Anim.flip_h = true
+					else: enemy.Anim.flip_h = false
 					var option = randi() % 4
 					if option == 0:
 						enemy.Anim.play("Bite")
+						Player.Anim.play("Hurt")
 						Player.health -= enemy.hurt_points * 5 + (randi() % 11 - 5)
 						await enemy.Anim.animation_finished
 					if option > 0:
 						enemy.Anim.play("Slap")
+						Player.Anim.play("Hurt")
 						Player.health -= enemy.hurt_points + (randi() % 2 - 1)
 						await enemy.Anim.animation_finished
 
 				else:
 					for i in next_to_player:
 						if not is_tile_occupied(i, "character") and not is_tile_off_map(i):
-							enemy.global_position = CurrentMap.to_global(CurrentMap.map_to_local(i))
+							var target_tile = i
+							await enemy.move_to_tile((target_tile), CurrentMap)
+							break
 		
 		health_update()
 
 func get_enemy_on_tile(tile: Vector2i):
 	for enemy in get_tree().get_nodes_in_group("fighting"):
-		var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
-		if enemy_tile == tile and not is_tile_off_map(tile):
-			return enemy
+		if not is_instance_valid(enemy):
+			return null
+		if enemy.is_in_group("enemy"):
+			var enemy_tile = CurrentMap.local_to_map(CurrentMap.to_local(enemy.global_position))
+			if enemy_tile == tile and not is_tile_off_map(tile):
+				return enemy
 	return null
 
 func hurt_the_enemy(enemy, damage):
-	#PLAY PLAYER ANIM
 	enemy.hit_points -= damage
 	var is_dead: bool = enemy.battle_update()
 	if is_dead:
 		enemy_number -= 1
+		player_moving = false
+		player_attacking = false
+		enemy.remove_from_group("fighting")
 		enemy.queue_free()
 		
 func all_enemies_killed(dead):
+	basic_atk_selected = false
+	area_atk_selected = false
+	heavy_atk_selected = false
+
+	UI.get_node("BattleLayer/BattleToolbelt/BasicAtk/Button").button_pressed = false
+	UI.get_node("BattleLayer/BattleToolbelt/AreaAtk/Button").button_pressed = false
+	UI.get_node("BattleLayer/BattleToolbelt/HeavyAtk/Button").button_pressed = false
+
 	if not dead:
-		print("killed all")
 		UI.Survived.visible = true
+		
 	else:
 		UI.Death.visible = true
 		MainScene.wood_resource = 0
@@ -869,9 +911,11 @@ func all_enemies_killed(dead):
 	MainScene.Map.visible = true
 	await MainScene.add_player()
 	queue_free()
+	
 # -------------------------
 # UI
 # -------------------------
+
 func _on_basic_changed(pressed: bool):
 	if pressed:
 		basic_atk_selected = true
