@@ -80,10 +80,10 @@ func _ready():
 		player_tile = Map.local_to_map(Player.global_position)
 	prev_player_tile = player_tile
 	
-	spawn_bug_eaters(100)
-	spawn_green_hoplites(250)
-	spawn_magma_golems(20)
-	spawn_pinkies(35)
+	spawn_bug_eaters(120)
+	spawn_green_hoplites(70)
+	spawn_magma_golems(30)
+	spawn_pinkies(55)
 	
 	UI.axe_changed.connect(_on_axe_changed)
 	UI.pickaxe_changed.connect(_on_pickaxe_changed)
