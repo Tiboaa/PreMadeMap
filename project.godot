@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 
 [display]
 
+window/size/mode=3
+window/size/resizable=false
 window/stretch/mode="canvas_items"
 mouse_cursor/custom_image="res://Art/mouse.png"
 

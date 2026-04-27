@@ -46,7 +46,7 @@ var move_there_tile: Vector2i = Vector2i(-1, -1)
 
 var player_attacking: bool = false
 
-func _process(delta):
+func _process(_delta):
 	if enemy_number <= 0:
 		all_enemies_killed(false)
 
